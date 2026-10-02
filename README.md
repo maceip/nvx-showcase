@@ -5,11 +5,17 @@ Build with Xcode 26 or newer (for the macOS 26 glass APIs); the app retains its
 macOS 14 deployment target and uses the strip's older-system material fallback.
 
 ```sh
-cd showcase
 swift test
 ./assemble.sh
 open dist/NVXShowcase.app
 ```
+
+## Pairs with NVX
+
+The app is a dashboard, not a hypervisor: every run shells out to
+`scripts/nvx.py` in an NVX checkout for kernels, guest images, and VM
+lifecycle. Point it at yours with `$NVX_REPO`, or run it from a bundle
+nested inside the checkout (it walks up to find `scripts/nvx.py`).
 
 The first window starts with Runtime and Snapshots. The `+` button and Command-T
 add an independent Runtime tab. Command-Shift-T or the tab-list menu adds a

@@ -70,11 +70,73 @@ struct WorkspaceTests {
         a.controller.consoleLines = ["keep this"]
         b.controller.phase = .live
         workspace.close(b.id)
-        #expect(b.owner == nil)
-        #expect(b.controller.phase == .done)
+        // Live tabs detach instead of dying: the VM keeps running and the
+        // tab parks until reattached or explicitly stopped.
+        #expect(!workspace.tabs.contains { $0 === b })
+        #expect(workspace.detached.contains { $0 === b })
+        #expect(b.controller.phase == .live)
+        #expect(b.owner === workspace)
         #expect(a.controller.consoleLines == ["keep this"])
         workspace.select(a.id); workspace.setPinned(a.id, true); workspace.closeSelected()
         #expect(workspace.tabs.contains { $0 === a })
+    }
+    @Test func closingLiveTabDetachesReattachesAndStops() {
+        let workspace = ShowcaseWorkspace()
+        defer { workspace.stopAll() }
+        let live = workspace.insert()
+        live.controller.phase = .live
+        workspace.close(live.id)
+        #expect(workspace.detached.contains { $0 === live })
+        #expect(live.controller.phase == .live)
+        workspace.reattach(live.id)
+        #expect(workspace.selected === live)
+        #expect(workspace.detached.isEmpty)
+        workspace.close(live.id)
+        #expect(workspace.detached.count == 1)
+        workspace.stopDetached(live.id)
+        #expect(workspace.detached.isEmpty)
+        #expect(live.controller.phase == .done)
+        #expect(live.owner == nil)
+    }
+    @Test func detachedTabKeepsRealProcessAlive() async throws {
+        let fm = FileManager.default
+        let root = fm.temporaryDirectory.appending(path: "nvx-tab-detach-test-\(UUID())")
+        let scripts = root.appending(path: "scripts"), runs = root.appending(path: "runs")
+        try fm.createDirectory(at: scripts, withIntermediateDirectories: true)
+        try fm.createDirectory(at: runs, withIntermediateDirectories: true)
+        // Same shim as the parallel-run test: a real child process with no VM.
+        try "import os, time\nprint(os.getpid(), flush=True)\ntime.sleep(60)\n".write(
+            to: scripts.appending(path: "nvx.py"), atomically: true, encoding: .utf8)
+        let controller = RunController(runsRoot: runs, resolveRepository: { root })
+        let tab = ShowcasePageTab(.runtime, controller: controller)
+        let workspace = ShowcaseWorkspace(tabs: [tab])
+        defer { workspace.stopAll(); try? fm.removeItem(at: root) }
+        controller.launch()
+        try await Task.sleep(for: .milliseconds(300))
+        #expect(controller.phase == .live)
+        workspace.close(tab.id)
+        #expect(workspace.detached.contains { $0 === tab })
+        try await Task.sleep(for: .milliseconds(600))
+        // The view is gone but the tail timer and child process survive.
+        #expect(controller.phase == .live)
+        #expect(!controller.consoleLines.isEmpty)
+        let dirs = try fm.contentsOfDirectory(at: runs, includingPropertiesForKeys: nil)
+        let pid = try #require(Int32(String(contentsOf: dirs[0].appending(path: "console.log"),
+            encoding: .utf8).trimmingCharacters(in: .whitespacesAndNewlines)))
+        #expect(kill(pid, 0) == 0)
+        workspace.reattach(tab.id)
+        #expect(workspace.selected === tab)
+        workspace.close(tab.id)
+        workspace.stopDetached(tab.id)
+        #expect(controller.phase == .done)
+        // stop() TERMs immediately and escalates to KILL after a grace
+        // period, so poll for actual process death instead of asserting it.
+        var dead = false
+        for _ in 0..<50 {
+            if kill(pid, 0) != 0 { dead = true; break }
+            try await Task.sleep(for: .milliseconds(100))
+        }
+        #expect(dead)
     }
     @Test func closingLastTabCreatesUsableReplacement() {
         let workspace = ShowcaseWorkspace(tabs: [ShowcasePageTab(.snapshots)])

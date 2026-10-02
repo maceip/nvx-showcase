@@ -15,7 +15,7 @@ final class ShowcasePageTab: Identifiable {
     let id = UUID()
     let kind: ShowcasePageKind
     let icon: NSImage?
-    let controller = RunController()
+    let controller: RunController
     @ObservationIgnored lazy var snapshots = SnapshotStore()
     var isPinned = false
     var customTitle: String?
@@ -28,8 +28,9 @@ final class ShowcasePageTab: Identifiable {
         retainedPage = host
         return host
     }
-    init(_ kind: ShowcasePageKind) {
+    init(_ kind: ShowcasePageKind, controller: RunController? = nil) {
         self.kind = kind
+        self.controller = controller ?? RunController()
         icon = NSImage(systemSymbolName: kind.symbol, accessibilityDescription: kind.rawValue)
     }
     /// Per-VM identity: a runtime tab names its payload and live state so
@@ -62,11 +63,18 @@ final class ShowcasePageTab: Identifiable {
     func stop() {
         if controller.phase == .live || controller.phase == .launching { controller.stop() }
         if kind == .snapshots { snapshots.stopResume() }
+        releaseView()
+        owner = nil
+    }
+    /// Release the retained hosting view without touching a live run.
+    /// Closing a live tab detaches it; the VM keeps running (its log
+    /// tail timer is owned by the retained controller) until the tab is
+    /// reattached, explicitly stopped, or the app quits.
+    func releaseView() {
         // Break the retained host -> SwiftUI root -> tab cycle only on close.
         retainedPage?.removeFromSuperview()
         retainedPage?.rootView = ShowcasePage(tab: nil)
         retainedPage = nil
-        owner = nil
     }
 }
 
@@ -95,11 +103,37 @@ final class ShowcaseWorkspace {
     }
     func close(_ id: UUID) {
         guard let index = tabs.firstIndex(where: { $0.id == id }) else { return }
-        tabs.remove(at: index).stop()
+        let tab = tabs[index]
+        if tab.kind == .runtime
+            && (tab.controller.phase == .live || tab.controller.phase == .launching) {
+            // A live VM outlives its tab: park the tab (view released,
+            // controller retained) so it can be reattached or stopped.
+            tabs.remove(at: index)
+            tab.releaseView()
+            detached.append(tab)
+        } else {
+            tabs.remove(at: index).stop()
+        }
         if tabs.isEmpty {
             let replacement = ShowcasePageTab(.runtime); replacement.owner = self; tabs = [replacement]
         }
         if selectedID == id { selectedID = tabs[min(index, tabs.count - 1)].id }
+    }
+    /// Tabs closed while live, in close order. Their VMs keep running.
+    private(set) var detached: [ShowcasePageTab] = []
+    /// Move a detached tab back into the strip and select it.
+    func reattach(_ id: UUID) {
+        guard let index = detached.firstIndex(where: { $0.id == id }) else { return }
+        let tab = detached.remove(at: index)
+        tab.owner = self
+        let after = tabs.firstIndex { $0.id == selectedID }.map { $0 + 1 } ?? tabs.count
+        tabs.insert(tab, at: max(pinnedCount, min(after, tabs.count)))
+        selectedID = id
+    }
+    /// Kill a detached tab's VM and drop it.
+    func stopDetached(_ id: UUID) {
+        guard let index = detached.firstIndex(where: { $0.id == id }) else { return }
+        detached.remove(at: index).stop()
     }
     func closeSelected() { if !selected.isPinned { close(selectedID) } }
     func move(_ id: UUID, to index: Int) {
@@ -143,7 +177,7 @@ final class ShowcaseWorkspace {
         if selectedID == id { selectedID = tabs[min(index, tabs.count - 1)].id }
         ShowcaseDetachedWindow.open(tab: tab, at: point, size: window?.frame.size)
     }
-    func stopAll() { tabs.forEach { $0.stop() } }
+    func stopAll() { tabs.forEach { $0.stop() }; detached.forEach { $0.stop() }; detached.removeAll() }
 }
 
 struct ShowcasePage: View {

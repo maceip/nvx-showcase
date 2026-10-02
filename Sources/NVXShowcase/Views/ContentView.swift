@@ -40,6 +40,17 @@ struct ContentView: View {
                             Label(tab.title, systemImage: tab.id == workspace.selectedID ? "checkmark" : tab.kind.symbol)
                         }
                     }
+                    if !workspace.detached.isEmpty {
+                        Divider()
+                        Section("Running without a tab") {
+                            ForEach(workspace.detached) { tab in
+                                Menu(tab.title) {
+                                    Button("Reattach Tab") { workspace.reattach(tab.id) }
+                                    Button("Stop VM", role: .destructive) { workspace.stopDetached(tab.id) }
+                                }
+                            }
+                        }
+                    }
                 } label: { Image(systemName: "rectangle.stack") }
                 .menuStyle(.borderlessButton)
                 .fixedSize()

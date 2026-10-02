@@ -1,0 +1,139 @@
+{
+  "" : {
+    "diagnostics" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcase-p.build/Objects-normal/arm64/NVXShowcase-primary.dia",
+    "emit-module-dependencies" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcase-p.build/Objects-normal/arm64/NVXShowcase-primary-emit-module.d",
+    "emit-module-diagnostics" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcase-p.build/Objects-normal/arm64/NVXShowcase-primary-emit-module.dia",
+    "pch" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcase-p.build/Objects-normal/arm64/NVXShowcase-primary-Bridging-header.pch",
+    "swift-dependencies" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcase-p.build/Objects-normal/arm64/NVXShowcase-primary.swiftdeps"
+  },
+  "/private/tmp/nvx-showcase-xfer/Sources/NVXShowcase/Models/Events.swift" : {
+    "const-values" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcase-p.build/Objects-normal/arm64/Events.swiftconstvalues",
+    "dependencies" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcase-p.build/Objects-normal/arm64/Events.d",
+    "diagnostics" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcase-p.build/Objects-normal/arm64/Events.dia",
+    "index-unit-output-path" : "/NVXShowcase.build/Debug/NVXShowcase-p.build/Objects-normal/arm64/Events.o",
+    "llvm-bc" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcase-p.build/Objects-normal/arm64/Events.bc",
+    "object" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcase-p.build/Objects-normal/arm64/Events.o",
+    "swift-dependencies" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcase-p.build/Objects-normal/arm64/Events.swiftdeps",
+    "swiftmodule" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcase-p.build/Objects-normal/arm64/Events~partial.swiftmodule"
+  },
+  "/private/tmp/nvx-showcase-xfer/Sources/NVXShowcase/Models/RunController.swift" : {
+    "const-values" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcase-p.build/Objects-normal/arm64/RunController.swiftconstvalues",
+    "dependencies" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcase-p.build/Objects-normal/arm64/RunController.d",
+    "diagnostics" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcase-p.build/Objects-normal/arm64/RunController.dia",
+    "index-unit-output-path" : "/NVXShowcase.build/Debug/NVXShowcase-p.build/Objects-normal/arm64/RunController.o",
+    "llvm-bc" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcase-p.build/Objects-normal/arm64/RunController.bc",
+    "object" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcase-p.build/Objects-normal/arm64/RunController.o",
+    "swift-dependencies" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcase-p.build/Objects-normal/arm64/RunController.swiftdeps",
+    "swiftmodule" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcase-p.build/Objects-normal/arm64/RunController~partial.swiftmodule"
+  },
+  "/private/tmp/nvx-showcase-xfer/Sources/NVXShowcase/Models/SnapshotStore.swift" : {
+    "const-values" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcase-p.build/Objects-normal/arm64/SnapshotStore.swiftconstvalues",
+    "dependencies" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcase-p.build/Objects-normal/arm64/SnapshotStore.d",
+    "diagnostics" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcase-p.build/Objects-normal/arm64/SnapshotStore.dia",
+    "index-unit-output-path" : "/NVXShowcase.build/Debug/NVXShowcase-p.build/Objects-normal/arm64/SnapshotStore.o",
+    "llvm-bc" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcase-p.build/Objects-normal/arm64/SnapshotStore.bc",
+    "object" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcase-p.build/Objects-normal/arm64/SnapshotStore.o",
+    "swift-dependencies" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcase-p.build/Objects-normal/arm64/SnapshotStore.swiftdeps",
+    "swiftmodule" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcase-p.build/Objects-normal/arm64/SnapshotStore~partial.swiftmodule"
+  },
+  "/private/tmp/nvx-showcase-xfer/Sources/NVXShowcase/Models/StreamParser.swift" : {
+    "const-values" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcase-p.build/Objects-normal/arm64/StreamParser.swiftconstvalues",
+    "dependencies" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcase-p.build/Objects-normal/arm64/StreamParser.d",
+    "diagnostics" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcase-p.build/Objects-normal/arm64/StreamParser.dia",
+    "index-unit-output-path" : "/NVXShowcase.build/Debug/NVXShowcase-p.build/Objects-normal/arm64/StreamParser.o",
+    "llvm-bc" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcase-p.build/Objects-normal/arm64/StreamParser.bc",
+    "object" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcase-p.build/Objects-normal/arm64/StreamParser.o",
+    "swift-dependencies" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcase-p.build/Objects-normal/arm64/StreamParser.swiftdeps",
+    "swiftmodule" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcase-p.build/Objects-normal/arm64/StreamParser~partial.swiftmodule"
+  },
+  "/private/tmp/nvx-showcase-xfer/Sources/NVXShowcase/NVXShowcaseApp.swift" : {
+    "const-values" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcase-p.build/Objects-normal/arm64/NVXShowcaseApp.swiftconstvalues",
+    "dependencies" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcase-p.build/Objects-normal/arm64/NVXShowcaseApp.d",
+    "diagnostics" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcase-p.build/Objects-normal/arm64/NVXShowcaseApp.dia",
+    "index-unit-output-path" : "/NVXShowcase.build/Debug/NVXShowcase-p.build/Objects-normal/arm64/NVXShowcaseApp.o",
+    "llvm-bc" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcase-p.build/Objects-normal/arm64/NVXShowcaseApp.bc",
+    "object" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcase-p.build/Objects-normal/arm64/NVXShowcaseApp.o",
+    "swift-dependencies" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcase-p.build/Objects-normal/arm64/NVXShowcaseApp.swiftdeps",
+    "swiftmodule" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcase-p.build/Objects-normal/arm64/NVXShowcaseApp~partial.swiftmodule"
+  },
+  "/private/tmp/nvx-showcase-xfer/Sources/NVXShowcase/Tabs/Pie/CompactTabStrip.swift" : {
+    "const-values" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcase-p.build/Objects-normal/arm64/CompactTabStrip.swiftconstvalues",
+    "dependencies" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcase-p.build/Objects-normal/arm64/CompactTabStrip.d",
+    "diagnostics" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcase-p.build/Objects-normal/arm64/CompactTabStrip.dia",
+    "index-unit-output-path" : "/NVXShowcase.build/Debug/NVXShowcase-p.build/Objects-normal/arm64/CompactTabStrip.o",
+    "llvm-bc" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcase-p.build/Objects-normal/arm64/CompactTabStrip.bc",
+    "object" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcase-p.build/Objects-normal/arm64/CompactTabStrip.o",
+    "swift-dependencies" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcase-p.build/Objects-normal/arm64/CompactTabStrip.swiftdeps",
+    "swiftmodule" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcase-p.build/Objects-normal/arm64/CompactTabStrip~partial.swiftmodule"
+  },
+  "/private/tmp/nvx-showcase-xfer/Sources/NVXShowcase/Tabs/Pie/TabStripGeometry.swift" : {
+    "const-values" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcase-p.build/Objects-normal/arm64/TabStripGeometry.swiftconstvalues",
+    "dependencies" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcase-p.build/Objects-normal/arm64/TabStripGeometry.d",
+    "diagnostics" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcase-p.build/Objects-normal/arm64/TabStripGeometry.dia",
+    "index-unit-output-path" : "/NVXShowcase.build/Debug/NVXShowcase-p.build/Objects-normal/arm64/TabStripGeometry.o",
+    "llvm-bc" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcase-p.build/Objects-normal/arm64/TabStripGeometry.bc",
+    "object" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcase-p.build/Objects-normal/arm64/TabStripGeometry.o",
+    "swift-dependencies" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcase-p.build/Objects-normal/arm64/TabStripGeometry.swiftdeps",
+    "swiftmodule" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcase-p.build/Objects-normal/arm64/TabStripGeometry~partial.swiftmodule"
+  },
+  "/private/tmp/nvx-showcase-xfer/Sources/NVXShowcase/Tabs/Pie/TitlebarControlLayout.swift" : {
+    "const-values" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcase-p.build/Objects-normal/arm64/TitlebarControlLayout.swiftconstvalues",
+    "dependencies" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcase-p.build/Objects-normal/arm64/TitlebarControlLayout.d",
+    "diagnostics" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcase-p.build/Objects-normal/arm64/TitlebarControlLayout.dia",
+    "index-unit-output-path" : "/NVXShowcase.build/Debug/NVXShowcase-p.build/Objects-normal/arm64/TitlebarControlLayout.o",
+    "llvm-bc" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcase-p.build/Objects-normal/arm64/TitlebarControlLayout.bc",
+    "object" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcase-p.build/Objects-normal/arm64/TitlebarControlLayout.o",
+    "swift-dependencies" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcase-p.build/Objects-normal/arm64/TitlebarControlLayout.swiftdeps",
+    "swiftmodule" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcase-p.build/Objects-normal/arm64/TitlebarControlLayout~partial.swiftmodule"
+  },
+  "/private/tmp/nvx-showcase-xfer/Sources/NVXShowcase/Tabs/ShowcaseWindows.swift" : {
+    "const-values" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcase-p.build/Objects-normal/arm64/ShowcaseWindows.swiftconstvalues",
+    "dependencies" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcase-p.build/Objects-normal/arm64/ShowcaseWindows.d",
+    "diagnostics" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcase-p.build/Objects-normal/arm64/ShowcaseWindows.dia",
+    "index-unit-output-path" : "/NVXShowcase.build/Debug/NVXShowcase-p.build/Objects-normal/arm64/ShowcaseWindows.o",
+    "llvm-bc" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcase-p.build/Objects-normal/arm64/ShowcaseWindows.bc",
+    "object" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcase-p.build/Objects-normal/arm64/ShowcaseWindows.o",
+    "swift-dependencies" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcase-p.build/Objects-normal/arm64/ShowcaseWindows.swiftdeps",
+    "swiftmodule" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcase-p.build/Objects-normal/arm64/ShowcaseWindows~partial.swiftmodule"
+  },
+  "/private/tmp/nvx-showcase-xfer/Sources/NVXShowcase/Tabs/ShowcaseWorkspace.swift" : {
+    "const-values" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcase-p.build/Objects-normal/arm64/ShowcaseWorkspace.swiftconstvalues",
+    "dependencies" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcase-p.build/Objects-normal/arm64/ShowcaseWorkspace.d",
+    "diagnostics" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcase-p.build/Objects-normal/arm64/ShowcaseWorkspace.dia",
+    "index-unit-output-path" : "/NVXShowcase.build/Debug/NVXShowcase-p.build/Objects-normal/arm64/ShowcaseWorkspace.o",
+    "llvm-bc" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcase-p.build/Objects-normal/arm64/ShowcaseWorkspace.bc",
+    "object" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcase-p.build/Objects-normal/arm64/ShowcaseWorkspace.o",
+    "swift-dependencies" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcase-p.build/Objects-normal/arm64/ShowcaseWorkspace.swiftdeps",
+    "swiftmodule" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcase-p.build/Objects-normal/arm64/ShowcaseWorkspace~partial.swiftmodule"
+  },
+  "/private/tmp/nvx-showcase-xfer/Sources/NVXShowcase/Views/ContentView.swift" : {
+    "const-values" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcase-p.build/Objects-normal/arm64/ContentView.swiftconstvalues",
+    "dependencies" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcase-p.build/Objects-normal/arm64/ContentView.d",
+    "diagnostics" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcase-p.build/Objects-normal/arm64/ContentView.dia",
+    "index-unit-output-path" : "/NVXShowcase.build/Debug/NVXShowcase-p.build/Objects-normal/arm64/ContentView.o",
+    "llvm-bc" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcase-p.build/Objects-normal/arm64/ContentView.bc",
+    "object" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcase-p.build/Objects-normal/arm64/ContentView.o",
+    "swift-dependencies" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcase-p.build/Objects-normal/arm64/ContentView.swiftdeps",
+    "swiftmodule" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcase-p.build/Objects-normal/arm64/ContentView~partial.swiftmodule"
+  },
+  "/private/tmp/nvx-showcase-xfer/Sources/NVXShowcase/Views/LiveView.swift" : {
+    "const-values" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcase-p.build/Objects-normal/arm64/LiveView.swiftconstvalues",
+    "dependencies" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcase-p.build/Objects-normal/arm64/LiveView.d",
+    "diagnostics" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcase-p.build/Objects-normal/arm64/LiveView.dia",
+    "index-unit-output-path" : "/NVXShowcase.build/Debug/NVXShowcase-p.build/Objects-normal/arm64/LiveView.o",
+    "llvm-bc" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcase-p.build/Objects-normal/arm64/LiveView.bc",
+    "object" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcase-p.build/Objects-normal/arm64/LiveView.o",
+    "swift-dependencies" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcase-p.build/Objects-normal/arm64/LiveView.swiftdeps",
+    "swiftmodule" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcase-p.build/Objects-normal/arm64/LiveView~partial.swiftmodule"
+  },
+  "/private/tmp/nvx-showcase-xfer/Sources/NVXShowcase/Views/SnapshotBrowserView.swift" : {
+    "const-values" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcase-p.build/Objects-normal/arm64/SnapshotBrowserView.swiftconstvalues",
+    "dependencies" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcase-p.build/Objects-normal/arm64/SnapshotBrowserView.d",
+    "diagnostics" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcase-p.build/Objects-normal/arm64/SnapshotBrowserView.dia",
+    "index-unit-output-path" : "/NVXShowcase.build/Debug/NVXShowcase-p.build/Objects-normal/arm64/SnapshotBrowserView.o",
+    "llvm-bc" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcase-p.build/Objects-normal/arm64/SnapshotBrowserView.bc",
+    "object" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcase-p.build/Objects-normal/arm64/SnapshotBrowserView.o",
+    "swift-dependencies" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcase-p.build/Objects-normal/arm64/SnapshotBrowserView.swiftdeps",
+    "swiftmodule" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcase-p.build/Objects-normal/arm64/SnapshotBrowserView~partial.swiftmodule"
+  }
+}

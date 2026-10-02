@@ -1,0 +1,4 @@
+module NVXShowcase {
+header "NVXShowcase-Swift.h"
+export *
+}

@@ -1,0 +1,49 @@
+{
+  "" : {
+    "diagnostics" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcaseTests-p.build/Objects-normal/arm64/NVXShowcaseTests-primary.dia",
+    "emit-module-dependencies" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcaseTests-p.build/Objects-normal/arm64/NVXShowcaseTests-primary-emit-module.d",
+    "emit-module-diagnostics" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcaseTests-p.build/Objects-normal/arm64/NVXShowcaseTests-primary-emit-module.dia",
+    "pch" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcaseTests-p.build/Objects-normal/arm64/NVXShowcaseTests-primary-Bridging-header.pch",
+    "swift-dependencies" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcaseTests-p.build/Objects-normal/arm64/NVXShowcaseTests-primary.swiftdeps"
+  },
+  "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcaseTests-p.build/DerivedSources/test_entry_point.swift" : {
+    "const-values" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcaseTests-p.build/Objects-normal/arm64/test_entry_point.swiftconstvalues",
+    "dependencies" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcaseTests-p.build/Objects-normal/arm64/test_entry_point.d",
+    "diagnostics" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcaseTests-p.build/Objects-normal/arm64/test_entry_point.dia",
+    "index-unit-output-path" : "/NVXShowcase.build/Debug/NVXShowcaseTests-p.build/Objects-normal/arm64/test_entry_point.o",
+    "llvm-bc" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcaseTests-p.build/Objects-normal/arm64/test_entry_point.bc",
+    "object" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcaseTests-p.build/Objects-normal/arm64/test_entry_point.o",
+    "swift-dependencies" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcaseTests-p.build/Objects-normal/arm64/test_entry_point.swiftdeps",
+    "swiftmodule" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcaseTests-p.build/Objects-normal/arm64/test_entry_point~partial.swiftmodule"
+  },
+  "/private/tmp/nvx-showcase-xfer/Tests/NVXShowcaseTests/EngineTests.swift" : {
+    "const-values" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcaseTests-p.build/Objects-normal/arm64/EngineTests.swiftconstvalues",
+    "dependencies" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcaseTests-p.build/Objects-normal/arm64/EngineTests.d",
+    "diagnostics" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcaseTests-p.build/Objects-normal/arm64/EngineTests.dia",
+    "index-unit-output-path" : "/NVXShowcase.build/Debug/NVXShowcaseTests-p.build/Objects-normal/arm64/EngineTests.o",
+    "llvm-bc" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcaseTests-p.build/Objects-normal/arm64/EngineTests.bc",
+    "object" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcaseTests-p.build/Objects-normal/arm64/EngineTests.o",
+    "swift-dependencies" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcaseTests-p.build/Objects-normal/arm64/EngineTests.swiftdeps",
+    "swiftmodule" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcaseTests-p.build/Objects-normal/arm64/EngineTests~partial.swiftmodule"
+  },
+  "/private/tmp/nvx-showcase-xfer/Tests/NVXShowcaseTests/ProxyTests.swift" : {
+    "const-values" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcaseTests-p.build/Objects-normal/arm64/ProxyTests.swiftconstvalues",
+    "dependencies" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcaseTests-p.build/Objects-normal/arm64/ProxyTests.d",
+    "diagnostics" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcaseTests-p.build/Objects-normal/arm64/ProxyTests.dia",
+    "index-unit-output-path" : "/NVXShowcase.build/Debug/NVXShowcaseTests-p.build/Objects-normal/arm64/ProxyTests.o",
+    "llvm-bc" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcaseTests-p.build/Objects-normal/arm64/ProxyTests.bc",
+    "object" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcaseTests-p.build/Objects-normal/arm64/ProxyTests.o",
+    "swift-dependencies" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcaseTests-p.build/Objects-normal/arm64/ProxyTests.swiftdeps",
+    "swiftmodule" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcaseTests-p.build/Objects-normal/arm64/ProxyTests~partial.swiftmodule"
+  },
+  "/private/tmp/nvx-showcase-xfer/Tests/NVXShowcaseTests/WorkspaceTests.swift" : {
+    "const-values" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcaseTests-p.build/Objects-normal/arm64/WorkspaceTests.swiftconstvalues",
+    "dependencies" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcaseTests-p.build/Objects-normal/arm64/WorkspaceTests.d",
+    "diagnostics" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcaseTests-p.build/Objects-normal/arm64/WorkspaceTests.dia",
+    "index-unit-output-path" : "/NVXShowcase.build/Debug/NVXShowcaseTests-p.build/Objects-normal/arm64/WorkspaceTests.o",
+    "llvm-bc" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcaseTests-p.build/Objects-normal/arm64/WorkspaceTests.bc",
+    "object" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcaseTests-p.build/Objects-normal/arm64/WorkspaceTests.o",
+    "swift-dependencies" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcaseTests-p.build/Objects-normal/arm64/WorkspaceTests.swiftdeps",
+    "swiftmodule" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/NVXShowcaseTests-p.build/Objects-normal/arm64/WorkspaceTests~partial.swiftmodule"
+  }
+}

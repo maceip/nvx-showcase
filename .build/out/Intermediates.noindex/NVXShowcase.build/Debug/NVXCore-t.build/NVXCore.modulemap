@@ -1,0 +1,4 @@
+module NVXCore {
+header "NVXCore-Swift.h"
+export *
+}

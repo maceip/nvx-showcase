@@ -1,0 +1,13 @@
+Target dependency graph (5 targets)
+Target 'AllExcludingTests' in project 'Aggregate'
+➜ Explicit dependency on target 'NVXShowcase-product' in project 'NVXShowcase'
+➜ Explicit dependency on target 'nvx-mcp-product' in project 'NVXShowcase'
+➜ Explicit dependency on target 'NVXCore-product' in project 'NVXShowcase'
+➜ Explicit dependency on target 'NVXCore' in project 'NVXShowcase'
+Target 'NVXCore-product' in project 'NVXShowcase'
+➜ Explicit dependency on target 'NVXCore' in project 'NVXShowcase'
+Target 'nvx-mcp-product' in project 'NVXShowcase'
+➜ Explicit dependency on target 'NVXCore' in project 'NVXShowcase'
+Target 'NVXShowcase-product' in project 'NVXShowcase'
+➜ Explicit dependency on target 'NVXCore' in project 'NVXShowcase'
+Target 'NVXCore' in project 'NVXShowcase' (no dependencies)

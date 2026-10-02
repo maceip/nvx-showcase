@@ -1,0 +1,19 @@
+{
+  "" : {
+    "diagnostics" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/nvx-mcp-p.build/Objects-normal/arm64/nvx-mcp-primary.dia",
+    "emit-module-dependencies" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/nvx-mcp-p.build/Objects-normal/arm64/nvx-mcp-primary-emit-module.d",
+    "emit-module-diagnostics" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/nvx-mcp-p.build/Objects-normal/arm64/nvx-mcp-primary-emit-module.dia",
+    "pch" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/nvx-mcp-p.build/Objects-normal/arm64/nvx-mcp-primary-Bridging-header.pch",
+    "swift-dependencies" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/nvx-mcp-p.build/Objects-normal/arm64/nvx-mcp-primary.swiftdeps"
+  },
+  "/private/tmp/nvx-showcase-xfer/Sources/NVXMCP/main.swift" : {
+    "const-values" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/nvx-mcp-p.build/Objects-normal/arm64/main.swiftconstvalues",
+    "dependencies" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/nvx-mcp-p.build/Objects-normal/arm64/main.d",
+    "diagnostics" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/nvx-mcp-p.build/Objects-normal/arm64/main.dia",
+    "index-unit-output-path" : "/NVXShowcase.build/Debug/nvx-mcp-p.build/Objects-normal/arm64/main.o",
+    "llvm-bc" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/nvx-mcp-p.build/Objects-normal/arm64/main.bc",
+    "object" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/nvx-mcp-p.build/Objects-normal/arm64/main.o",
+    "swift-dependencies" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/nvx-mcp-p.build/Objects-normal/arm64/main.swiftdeps",
+    "swiftmodule" : "/private/tmp/nvx-showcase-xfer/.build/out/Intermediates.noindex/NVXShowcase.build/Debug/nvx-mcp-p.build/Objects-normal/arm64/main~partial.swiftmodule"
+  }
+}

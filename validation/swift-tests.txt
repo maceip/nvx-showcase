@@ -1,0 +1,40 @@
+[0/1] Planning build
+Building for debugging...
+[0/5] Write sources
+[1/5] Write swift-version--58304C5D6DBC2206.txt
+[3/5] Emitting module NVXShowcaseTests
+[4/5] Compiling NVXShowcaseTests WorkspaceTests.swift
+[4/6] Write Objects.LinkFileList
+[5/6] Linking NVXShowcasePackageTests
+Build complete! (1.10s)
+Test Suite 'All tests' started at 2026-10-02 04:50:57.722.
+Test Suite 'All tests' passed at 2026-10-02 04:50:57.728.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.006) seconds
+􀟈  Test run started.
+􀄵  Testing Library Version: 1743
+􀄵  Target Platform: arm64e-apple-macos14.0
+􀟈  Suite WorkspaceTests started.
+􀟈  Test initialPagesAndIndependentRuntimes() started.
+􁁛  Test initialPagesAndIndependentRuntimes() passed after 0.031 seconds.
+􀟈  Test transfersKeepControllersHostingViewAndContent() started.
+􁁛  Test transfersKeepControllersHostingViewAndContent() passed after 0.018 seconds.
+􀟈  Test singleTabCannotTransferOrDetach() started.
+􁁛  Test singleTabCannotTransferOrDetach() passed after 0.001 seconds.
+􀟈  Test snapshotUIStateTravelsWithTheTab() started.
+􁁛  Test snapshotUIStateTravelsWithTheTab() passed after 0.001 seconds.
+􀟈  Test pinsConstrainReorderAndCrossWindowInsertion() started.
+􁁛  Test pinsConstrainReorderAndCrossWindowInsertion() passed after 0.001 seconds.
+􀟈  Test closeOneTabPreservesOthersAndPinnedCommandClose() started.
+􁁛  Test closeOneTabPreservesOthersAndPinnedCommandClose() passed after 0.001 seconds.
+􀟈  Test closingLastTabCreatesUsableReplacement() started.
+􁁛  Test closingLastTabCreatesUsableReplacement() passed after 0.001 seconds.
+􀟈  Test manyTabStressPreservesAllIdentities() started.
+􁁛  Test manyTabStressPreservesAllIdentities() passed after 0.001 seconds.
+􀟈  Test nativeGeometryHasEarlySnapAndReversalBand() started.
+􁁛  Test nativeGeometryHasEarlySnapAndReversalBand() passed after 0.001 seconds.
+􀟈  Test compressedRuntimeTitleFitsWithoutInvisibleRefreshControl() started.
+􁁛  Test compressedRuntimeTitleFitsWithoutInvisibleRefreshControl() passed after 0.027 seconds.
+􀟈  Test simultaneousRunsUseSeparateLogsAndStoppingOneLeavesOtherAlive() started.
+􁁛  Test simultaneousRunsUseSeparateLogsAndStoppingOneLeavesOtherAlive() passed after 0.454 seconds.
+􁁛  Suite WorkspaceTests passed after 0.536 seconds.
+􁁛  Test run with 11 tests in 1 suite passed after 0.536 seconds.

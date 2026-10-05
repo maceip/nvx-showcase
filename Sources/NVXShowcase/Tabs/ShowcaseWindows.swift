@@ -90,6 +90,8 @@ struct ShowcaseTabCommands: Commands {
                 .keyboardShortcut("t", modifiers: .command).disabled(workspace == nil)
             Button("New Snapshots Tab") { workspace?.insert(.snapshots) }
                 .keyboardShortcut("t", modifiers: [.command, .shift]).disabled(workspace == nil)
+            Button("New Diff Tab") { workspace?.insert(.diff) }
+                .keyboardShortcut("d", modifiers: [.command, .shift]).disabled(workspace == nil)
             Button("Close Tab") { workspace?.closeSelected() }
                 .keyboardShortcut("w", modifiers: .command).disabled(workspace == nil || workspace?.selected.isPinned == true)
         }

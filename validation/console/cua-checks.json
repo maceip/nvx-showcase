@@ -1,0 +1,18 @@
+[
+  {
+    "passed": true,
+    "check": "Runtime fixture launches from the native controls"
+  },
+  {
+    "passed": true,
+    "check": "Snapshot actions remain available after verification"
+  },
+  {
+    "passed": true,
+    "check": "Adding a runtime preserves existing instrument pages"
+  },
+  {
+    "passed": true,
+    "check": "Closing the added runtime preserves both original tabs"
+  }
+]

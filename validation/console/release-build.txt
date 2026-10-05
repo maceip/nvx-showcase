@@ -1,0 +1,3 @@
+Build complete! (6.26s)
+dist/NVXShowcase.app: replacing existing signature
+assembled dist/NVXShowcase.app

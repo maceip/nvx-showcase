@@ -1,0 +1,19 @@
+[
+  {
+    "passed": true,
+    "check": "Final build: hidden sidebar survives detachment"
+  },
+  {
+    "passed": true,
+    "check": "Final build: reattached page retains its hidden sidebar"
+  },
+  {
+    "passed": true,
+    "check": "Final build: 16 tabs with selected Runtime title width sufficient to show the full word",
+    "fieldWidth": 58.0
+  },
+  {
+    "passed": true,
+    "check": "Final build: repeated close preserves Runtime and Snapshots"
+  }
+]

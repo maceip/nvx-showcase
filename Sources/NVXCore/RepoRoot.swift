@@ -51,6 +51,38 @@ public enum RepoRoot {
         return nil
     }
 
+    /// Python 3.10 or newer. GUI apps inherit a PATH where `python3` is
+    /// often Apple's 3.9, and that interpreter rejects `dataclass(slots=True)`.
+    public static func python3(near repo: URL) -> URL {
+        var candidates = [
+            repo.appending(path: "build/diff-venv/bin/python3").path,
+            "/opt/homebrew/bin/python3",
+            "/usr/local/bin/python3",
+        ]
+        if let path = ProcessInfo.processInfo.environment["PATH"] {
+            for directory in path.split(separator: ":") {
+                candidates.append(String(directory) + "/python3")
+            }
+        }
+        candidates.append("/usr/bin/python3")
+        let fm = FileManager.default
+        for path in candidates where fm.isExecutableFile(atPath: path) && pythonSupportsSlots(path) {
+            return URL(fileURLWithPath: path)
+        }
+        return URL(fileURLWithPath: candidates.last ?? "/usr/bin/python3")
+    }
+
+    private static func pythonSupportsSlots(_ path: String) -> Bool {
+        let proc = Process()
+        proc.executableURL = URL(fileURLWithPath: path)
+        proc.arguments = ["-c", "import sys; raise SystemExit(0 if sys.version_info >= (3, 10) else 1)"]
+        proc.standardOutput = FileHandle.nullDevice
+        proc.standardError = FileHandle.nullDevice
+        guard (try? proc.run()) != nil else { return false }
+        proc.waitUntilExit()
+        return proc.terminationStatus == 0
+    }
+
     /// Direct children of a pid via pgrep.
     private static func children(of pid: Int32) -> [Int32] {
         let out = Pipe()

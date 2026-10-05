@@ -1,0 +1,24 @@
+{
+  "created": "2026-10-02T20:19:50.510688+00:00",
+  "tests": 36,
+  "real_telemetry_test": "InstrumentTests.agentCommandCollectsActualVMMResources: cold-boot VMM executes sleep 2; collected CPU, resident memory and disk counters.",
+  "ui_validation": "CUA in pie-safari-tabs isolated guest. Explicit UI fixtures; no guest was launched by the UI fixture and fixture snapshot verification is not real.",
+  "final_visual_checks": [
+    "Runtime idle layout at 1100x732",
+    "Populated runtime with fixture events, real host counters from fixture process",
+    "Snapshots before and after fixture verification",
+    "Sidebar hidden and shown",
+    "Added and closed runtime tab without losing existing pages",
+    "Final resource captions fit and binary size units agree"
+  ],
+  "binary_sha256": "eca9a3d4287f158f4f5031c7dfe6051da834776c4abb00e73324e91f33eb9c44",
+  "source_sha256": {
+    "Sources/NVXShowcase/Views/ConsoleInstruments.swift": "1cdb4419b36e5ecca9f78ec3e5c73872f447389b339ca8f65df04a28a66f8170",
+    "Sources/NVXShowcase/Views/LiveView.swift": "6d421ba792cb857d677dc7b7c06e3c87f112a15d70f55619cfee87d287e22d68",
+    "Sources/NVXShowcase/Views/SnapshotBrowserView.swift": "7ad662185d6f3a92ff5d50579572927a359add9384257d3770056daddc09979a",
+    "Sources/NVXShowcase/Models/RuntimeResources.swift": "ea26dead6b3b6b3228d034f945bf2d02dcf601f37649663f4d222be3e4455ed1",
+    "Sources/NVXShowcase/Models/RunController.swift": "0754ac61e39531a4c72d10f67a1f183e5d980304f50cb79cc88fa3390d0ae62f",
+    "Sources/NVXShowcase/Models/SnapshotStore.swift": "011e6339c88ea1f15ff1297e0b612e0becd4609c38ff3b3ea1d3bc6aa2a81580",
+    "Sources/NVXCore/NVXEngine.swift": "3646fa00ee37375e978b80ee6c254c7049bb4213cefb18f79d94cf58a4d196c8"
+  }
+}

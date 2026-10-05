@@ -7,6 +7,45 @@ struct SnapshotFile: Identifiable, Hashable {
     let name: String
     let size: Int64
     let modified: Date
+    var allocatedSize: Int64? = nil
+}
+
+/// Fields printed by `nvx.py snapshot verify`. Empty strings mean the
+/// generation did not declare that fact. Guest RAM bytes are never here.
+struct SnapshotContract: Equatable {
+    var tier = ""
+    var restorePolicy = ""
+    var hypervisor = ""
+    var bootMode = ""
+    var integrity = ""
+    var scratchPolicy = ""
+    var resumeClaim = ""
+    var consumedSections = ""
+
+    static func parse(_ output: String) -> SnapshotContract {
+        func value(_ prefix: String) -> String {
+            for line in output.components(separatedBy: "\n") {
+                let text = line.trimmingCharacters(in: .whitespaces)
+                guard text.hasPrefix(prefix) else { continue }
+                return text.dropFirst(prefix.count)
+                    .trimmingCharacters(in: .whitespaces)
+            }
+            return ""
+        }
+        func shown(_ raw: String) -> String {
+            raw == "(none)" ? "" : raw
+        }
+        return SnapshotContract(
+            tier: shown(value("snapshot tier:")),
+            restorePolicy: shown(value("restore policy:")),
+            hypervisor: shown(value("source hypervisor:")),
+            bootMode: value("boot mode:"),
+            integrity: value("payload integrity:"),
+            scratchPolicy: value("scratch policy:"),
+            resumeClaim: value("resume claim:"),
+            consumedSections: shown(value("consumed sections:"))
+        )
+    }
 }
 
 /// One snapshot generation directory on disk. Identity is the directory
@@ -17,7 +56,20 @@ struct SnapshotInfo: Identifiable, Hashable {
     let url: URL
     let files: [SnapshotFile]
 
+    /// Guest RAM whose allocated blocks are far below the logical image.
+    /// That is a sparse file or an APFS clone, not a measurement of sharing.
+    var memorySharesBacking: Bool {
+        guard let memory = files.first(where: { $0.name == "memory.bin" }),
+              let allocated = memory.allocatedSize,
+              memory.size >= 1024 * 1024 else { return false }
+        return allocated * 2 < memory.size
+    }
+
     var totalBytes: Int64 { files.map(\.size).reduce(0, +) }
+    var allocatedBytes: Int64? {
+        guard files.allSatisfy({ $0.allocatedSize != nil }) else { return nil }
+        return files.compactMap(\.allocatedSize).reduce(0, +)
+    }
 
     static func == (lhs: SnapshotInfo, rhs: SnapshotInfo) -> Bool {
         lhs.url == rhs.url
@@ -42,7 +94,15 @@ final class SnapshotStore {
         }
     }
     var snapshots: [SnapshotInfo] = []
-    var selection: SnapshotInfo?
+    var selection: SnapshotInfo? {
+        didSet {
+            guard oldValue?.id != selection?.id else { return }
+            verificationGeneration = UUID()
+            verifyOutput = ""
+            verifyState = .idle
+            if !resumeRunning { resumeOutput = "" }
+        }
+    }
     var verifyOutput: String = ""
     var verifyState: VerifyState = .idle
     var resumeOutput: String = ""
@@ -50,6 +110,26 @@ final class SnapshotStore {
     var showsSidebar = true
     private var resumeProcess: Process?
     private var resumeGeneration = UUID()
+    private var verificationGeneration = UUID()
+
+    var verifiedCPUCount: Int? {
+        guard let value = verifiedField("vCPUs:"), let count = Int(value), count > 0 else { return nil }
+        return count
+    }
+    var verifiedArchitecture: String? { verifiedField("architecture:") }
+    var contract: SnapshotContract {
+        guard verifyState == .ok else { return SnapshotContract() }
+        return SnapshotContract.parse(verifyOutput)
+    }
+    private func verifiedField(_ prefix: String) -> String? {
+        guard verifyState == .ok else { return nil }
+        return verifyOutput.components(separatedBy: "\n").compactMap { line in
+            let text = line.trimmingCharacters(in: .whitespaces)
+            guard text.hasPrefix(prefix) else { return nil }
+            let value = text.dropFirst(prefix.count).trimmingCharacters(in: .whitespaces)
+            return value.isEmpty ? nil : value
+        }.first
+    }
 
     enum VerifyState: String {
         case idle = "Not verified"
@@ -111,11 +191,12 @@ final class SnapshotStore {
         for dir in generationDirs {
             let files = ((try? fm.contentsOfDirectory(at: dir, includingPropertiesForKeys: [.fileSizeKey, .contentModificationDateKey])) ?? [])
                 .compactMap { url -> SnapshotFile? in
-                    guard let vals = try? url.resourceValues(forKeys: [.fileSizeKey, .contentModificationDateKey, .isDirectoryKey]),
+                    guard let vals = try? url.resourceValues(forKeys: [.fileSizeKey, .totalFileAllocatedSizeKey, .contentModificationDateKey, .isDirectoryKey]),
                           vals.isDirectory != true else { return nil }
                     return SnapshotFile(name: url.lastPathComponent,
                                         size: Int64(vals.fileSize ?? 0),
-                                        modified: vals.contentModificationDate ?? .distantPast)
+                                        modified: vals.contentModificationDate ?? .distantPast,
+                                        allocatedSize: vals.totalFileAllocatedSize.map(Int64.init))
                 }
                 .sorted { $0.name < $1.name }
             infos.append(SnapshotInfo(url: dir, files: files))
@@ -133,13 +214,16 @@ final class SnapshotStore {
         }
         verifyState = .running
         verifyOutput = ""
+        let generation = UUID()
+        verificationGeneration = generation
         DispatchQueue.global(qos: .userInitiated).async { [weak self] in
             let (text, ok) = Self.runNVX(repo: repo,
                                          args: ["snapshot", "verify",
                                                 snapshot.url.path])
             Task { @MainActor [weak self] in
-                self?.verifyOutput = text
-                self?.verifyState = ok ? .ok : .failed
+                guard let self, self.verificationGeneration == generation else { return }
+                self.verifyOutput = text
+                self.verifyState = ok ? .ok : .failed
             }
         }
     }
@@ -149,9 +233,8 @@ final class SnapshotStore {
     nonisolated private static func runNVX(repo: URL,
                                            args: [String]) -> (String, Bool) {
         let proc = Process()
-        proc.executableURL = URL(fileURLWithPath: "/usr/bin/env")
-        proc.arguments = ["python3",
-                          repo.appending(path: "scripts/nvx.py").path] + args
+        proc.executableURL = RepoRoot.python3(near: repo)
+        proc.arguments = [repo.appending(path: "scripts/nvx.py").path] + args
         proc.standardInput = FileHandle.nullDevice
         let pipe = Pipe()
         proc.standardOutput = pipe
@@ -162,9 +245,9 @@ final class SnapshotStore {
         } catch {
             return ("failed to launch nvx.py: \(error)", false)
         }
-        proc.waitUntilExit()
         let text = String(data: pipe.fileHandleForReading.readDataToEndOfFile(),
                           encoding: .utf8) ?? ""
+        proc.waitUntilExit()
         return (text, proc.terminationStatus == 0)
     }
 
@@ -197,9 +280,8 @@ final class SnapshotStore {
         resumeRunning = true
         resumeOutput = ""
         let proc = Process()
-        proc.executableURL = URL(fileURLWithPath: "/usr/bin/env")
-        proc.arguments = ["python3",
-                          repo.appending(path: "scripts/nvx.py").path,
+        proc.executableURL = RepoRoot.python3(near: repo)
+        proc.arguments = [repo.appending(path: "scripts/nvx.py").path,
                           "run", "--hypervisor", "hvf",
                           "--restore-snapshot", snapshot.url.path]
         proc.standardInput = FileHandle.nullDevice

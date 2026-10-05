@@ -1,9 +1,9 @@
 [
   {
     "source": "/Users/mac/Documents/Pie/PiCode/Features/Tabs/CompactTabStrip.swift",
-    "sourceSHA256": "a4be2507033ed0b64e52d9e1c2c95091b64070a6521b449ae4382004fb214507",
+    "sourceSHA256": "b923207c86934251580cf4c7439eaf4612075965e934a0782b6b570f912f7a14",
     "vendored": "showcase/Sources/NVXShowcase/Tabs/Pie/CompactTabStrip.swift",
-    "vendoredSHA256": "f1c1658ac0ab57c8c7b3df0346c3499b4e1dee5d091bcfab7d6f571870547a0c"
+    "vendoredSHA256": "d3b023dd0744e7615f19df83be946f7e03a981b408c953c240ac7e3a186b6708"
   },
   {
     "source": "/Users/mac/Documents/Pie/PiCode/Features/Tabs/TabStripGeometry.swift",
@@ -16,5 +16,23 @@
     "sourceSHA256": "1c360886d21c2cfad63b78ea7a14140bf555fed69510ed9daf0d12a6131921be",
     "vendored": "showcase/Sources/NVXShowcase/Tabs/Pie/TitlebarControlLayout.swift",
     "vendoredSHA256": "1c360886d21c2cfad63b78ea7a14140bf555fed69510ed9daf0d12a6131921be"
+  },
+  {
+    "source": "/Users/mac/Documents/Pie/PiCode/Features/Tabs/TabStripWindowDragGuard.swift",
+    "sourceSHA256": "99399267aaa7595d29f81eb7ea079e12d8fdb5ac4e1726a6dff0fd7e6aab4704",
+    "vendored": "showcase/Sources/NVXShowcase/Tabs/Pie/TabStripWindowDragGuard.swift",
+    "vendoredSHA256": "99399267aaa7595d29f81eb7ea079e12d8fdb5ac4e1726a6dff0fd7e6aab4704"
+  },
+  {
+    "source": "/Users/mac/Documents/Pie/PiCode/Features/Tabs/TabPresentation.swift",
+    "vendored": "showcase/Sources/NVXShowcase/Tabs/Pie/TabPresentation.swift",
+    "sourceSHA256": "113176df29a050018aeddded5b53c9cb1b0211417d0be7f4669d2cf2470003e1",
+    "vendoredSHA256": "113176df29a050018aeddded5b53c9cb1b0211417d0be7f4669d2cf2470003e1"
+  },
+  {
+    "source": "/Users/mac/Documents/Pie/PiCode/Features/Tabs/TabHoverPreview.swift",
+    "vendored": "showcase/Sources/NVXShowcase/Tabs/Pie/TabHoverPreview.swift",
+    "sourceSHA256": "387e8e5233784f9f877bfd150f6b8db4027b7143f030540698ad363c2bc35943",
+    "vendoredSHA256": "387e8e5233784f9f877bfd150f6b8db4027b7143f030540698ad363c2bc35943"
   }
 ]

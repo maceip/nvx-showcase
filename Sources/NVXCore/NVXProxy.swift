@@ -150,20 +150,20 @@ public final class NVXProxy: @unchecked Sendable {
         var upstream = URLRequest(url: url)
         upstream.httpMethod = request.method
         upstream.httpBody = request.body.isEmpty ? nil : request.body
-        let excluded = hopByHop.union(["host", "content-length", "authorization", "x-api-key",
-                                       "proxy-authorization", "expect", "accept-encoding"])
-            .union(connectionHeaders(request.headers))
-        for (name, value) in request.headers where !excluded.contains(name) {
-            upstream.setValue(value, forHTTPHeaderField: name)
-        }
-        upstream.setValue("identity", forHTTPHeaderField: "Accept-Encoding")
-        if anthropic {
-            upstream.setValue(key, forHTTPHeaderField: "x-api-key")
-            if upstream.value(forHTTPHeaderField: "anthropic-version") == nil {
+        let host = anthropic ? "api.anthropic.com" : "api.openai.com"
+        let scope = CredentialProxyScope(host, 443)
+        do {
+            let decision = try CredentialProxyPolicy.prepare(method: request.method, target: origin + request.target,
+                headers: request.headers.map { ($0.key, $0.value) }, allowed: [scope],
+                bindings: [CredentialProxyBinding(scope: scope, value: key,
+                    header: anthropic ? "x-api-key" : "Authorization", prefix: anthropic ? "" : "Bearer ")])
+            for (name, value) in decision.headers { upstream.setValue(value, forHTTPHeaderField: name) }
+            if anthropic && upstream.value(forHTTPHeaderField: "anthropic-version") == nil {
                 upstream.setValue("2023-06-01", forHTTPHeaderField: "anthropic-version")
             }
-        } else {
-            upstream.setValue("Bearer \(key)", forHTTPHeaderField: "Authorization")
+        } catch {
+            client.respond(status: 400, message: "Invalid request policy")
+            return
         }
         let callbackQueue = queue
         let task = session.dataTask(with: upstream) { [weak client] data, response, error in

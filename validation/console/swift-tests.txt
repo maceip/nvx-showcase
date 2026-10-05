@@ -1,0 +1,440 @@
+[0/1] Planning build
+Building for debugging...
+[0/8] Write sources
+[2/8] Write swift-version--58304C5D6DBC2206.txt
+[4/10] Compiling NVXShowcase SnapshotStore.swift
+[5/10] Compiling NVXShowcase RunController.swift
+[6/10] Compiling NVXShowcase SnapshotBrowserView.swift
+[7/10] Emitting module NVXShowcase
+[8/20] Compiling NVXShowcase LiveView.swift
+[9/20] Compiling NVXShowcase ContentView.swift
+[10/20] Compiling NVXShowcase ShowcaseWindows.swift
+[11/20] Compiling NVXShowcase TabStripGeometry.swift
+[12/20] Compiling NVXShowcase TitlebarControlLayout.swift
+[13/20] Compiling NVXShowcase ConsoleInstruments.swift
+[14/20] Compiling NVXShowcase ShowcaseWorkspace.swift
+[15/20] Compiling NVXShowcase RuntimeResources.swift
+[16/20] Compiling NVXShowcase Events.swift
+[17/20] Compiling NVXShowcase CompactTabStrip.swift
+/Users/mac/nvx/showcase/Sources/NVXShowcase/Tabs/Pie/CompactTabStrip.swift:442:36: warning: 'CGWindowListCreateImage' was deprecated in macOS 14.0: Please use ScreenCaptureKit instead. [#DeprecatedDeclaration]
+ 440 |         // native glass/sidebar materials intact; cacheDisplay turns those into
+ 441 |         // blank blocks. No display or other application's window is requested.
+ 442 |         if let window, let image = CGWindowListCreateImage(.null, .optionIncludingWindow,
+     |                                    `- warning: 'CGWindowListCreateImage' was deprecated in macOS 14.0: Please use ScreenCaptureKit instead. [#DeprecatedDeclaration]
+ 443 |             CGWindowID(window.windowNumber), [.boundsIgnoreFraming, .bestResolution]) {
+ 444 |             return NSImage(cgImage: image, size: window.frame.size)
+
+[#DeprecatedDeclaration]: <https://docs.swift.org/compiler/documentation/diagnostics/deprecated-declaration>
+[17/21] Write Objects.LinkFileList
+[18/21] Linking NVXShowcase
+[19/21] Applying NVXShowcase
+[21/24] Compiling NVXShowcaseTests WorkspaceTests.swift
+[22/24] Emitting module NVXShowcaseTests
+[23/24] Compiling NVXShowcaseTests InstrumentTests.swift
+[23/25] Write Objects.LinkFileList
+[24/25] Linking NVXShowcasePackageTests
+Build complete! (3.93s)
+Test Suite 'All tests' started at 2026-10-02 13:17:52.264.
+Test Suite 'All tests' passed at 2026-10-02 13:17:52.270.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.006) seconds
+􀟈  Test run started.
+􀄵  Testing Library Version: 1743
+􀄵  Target Platform: arm64e-apple-macos14.0
+􀟈  Suite PortableMCPTests started.
+􀟈  Suite WorkspaceTests started.
+􀟈  Suite InstrumentTests started.
+􀟈  Suite ProxyGoldenTests started.
+􀟈  Suite ProxyTests started.
+􀟈  Suite EngineTests started.
+􀟈  Test commonPythonAndSwiftVectors() started.
+􀟈  Test languageNeutralProtocolVectors() started.
+􀟈  Test initialPagesAndIndependentRuntimes() started.
+􀟈  Test statusReportsReady() started.
+􀟈  Test allocationUsesResolvedInvocationNotGuestLogText() started.
+􀟈  Test startsOnLoopbackAndReturnsActualPort() started.
+􁁛  Test languageNeutralProtocolVectors() passed after 0.001 seconds.
+􁁛  Suite PortableMCPTests passed after 0.001 seconds.
+􁁛  Test commonPythonAndSwiftVectors() passed after 0.001 seconds.
+􁁛  Suite ProxyGoldenTests passed after 0.001 seconds.
+Status ready: true
+Repo root: /Users/mac/nvx
+Default snapshot available: true
+􁁛  Test statusReportsReady() passed after 0.002 seconds.
+􀟈  Test verifyExistingSnapshot() started.
+􁁛  Test startsOnLoopbackAndReturnsActualPort() passed after 0.004 seconds.
+􀟈  Test acceptsHTTPConnection() started.
+􁁛  Test acceptsHTTPConnection() passed after 0.004 seconds.
+􀟈  Test stopsAndClosesListenerAndActiveConnections() started.
+􁁛  Test stopsAndClosesListenerAndActiveConnections() passed after 0.001 seconds.
+􀟈  Test restartsAfterStop() started.
+􁁛  Test restartsAfterStop() passed after 0.001 seconds.
+􀟈  Test occupiedPortThrows() started.
+􁁛  Test occupiedPortThrows() passed after 0.001 seconds.
+􀟈  Test releasesListenerOnDeinit() started.
+􁁛  Test releasesListenerOnDeinit() passed after 0.001 seconds.
+􀟈  Test routesProvidersAndReplacesCallerCredentials() started.
+􁁛  Test routesProvidersAndReplacesCallerCredentials() passed after 0.002 seconds.
+􀟈  Test decodesChunkedRequestBody() started.
+􁁛  Test decodesChunkedRequestBody() passed after 0.001 seconds.
+􀟈  Test rejectsMissingCredentialsAndAmbiguousFraming() started.
+􁁛  Test rejectsMissingCredentialsAndAmbiguousFraming() passed after 0.001 seconds.
+􀟈  Test returnsUpstreamFailuresWithoutExposingCredentials() started.
+􁁛  Test returnsUpstreamFailuresWithoutExposingCredentials() passed after 0.001 seconds.
+􁁛  Suite ProxyTests passed after 0.015 seconds.
+􁁛  Test allocationUsesResolvedInvocationNotGuestLogText() passed after 0.032 seconds.
+􁁛  Test initialPagesAndIndependentRuntimes() passed after 0.032 seconds.
+􀟈  Test unavailableAndTimeFormattingDoNotInventValues() started.
+􀟈  Test transfersKeepControllersHostingViewAndContent() started.
+􁁛  Test unavailableAndTimeFormattingDoNotInventValues() passed after 0.001 seconds.
+􀟈  Test snapshotConfigurationRequiresSuccessfulVerificationAndResetsOnSelection() started.
+􁁛  Test transfersKeepControllersHostingViewAndContent() passed after 0.013 seconds.
+􀟈  Test singleTabCannotTransferOrDetach() started.
+􁁛  Test snapshotConfigurationRequiresSuccessfulVerificationAndResetsOnSelection() passed after 0.013 seconds.
+􀟈  Test silentProcessExitFreezesElapsedAndStopsSampling() started.
+􁁛  Test singleTabCannotTransferOrDetach() passed after 0.003 seconds.
+􀟈  Test snapshotUIStateTravelsWithTheTab() started.
+􁁛  Test snapshotUIStateTravelsWithTheTab() passed after 0.001 seconds.
+􀟈  Test pinsConstrainReorderAndCrossWindowInsertion() started.
+􁁛  Test pinsConstrainReorderAndCrossWindowInsertion() passed after 0.001 seconds.
+􀟈  Test closeOneTabPreservesOthersAndPinnedCommandClose() started.
+􁁛  Test closeOneTabPreservesOthersAndPinnedCommandClose() passed after 0.001 seconds.
+􀟈  Test closingLastTabCreatesUsableReplacement() started.
+􁁛  Test closingLastTabCreatesUsableReplacement() passed after 0.001 seconds.
+􀟈  Test manyTabStressPreservesAllIdentities() started.
+􁁛  Test manyTabStressPreservesAllIdentities() passed after 0.002 seconds.
+􀟈  Test nativeGeometryHasEarlySnapAndReversalBand() started.
+􁁛  Test nativeGeometryHasEarlySnapAndReversalBand() passed after 0.001 seconds.
+􀟈  Test compressedRuntimeTitleFitsWithoutInvisibleRefreshControl() started.
+􁁛  Test compressedRuntimeTitleFitsWithoutInvisibleRefreshControl() passed after 0.021 seconds.
+􀟈  Test simultaneousRunsUseSeparateLogsAndStoppingOneLeavesOtherAlive() started.
+Manifest valid: true arch: aarch64
+􁁛  Test verifyExistingSnapshot() passed after 0.148 seconds.
+􀟈  Test runCommandColdBoot() started.
+[VM LINE]:    0.011972958s  WARN worker_new{ name="VmWorker" action="new"}: openvmm_core::worker::dispatch:  PMU GSIV is not set
+[VM LINE]:    0.014192042s  INFO worker_new{ name="VmWorker" action="new"}:post-memory partition finalization: openvmm_core::worker::dispatch:  post-memory partition finalization completed elapsed_us=0x0 success=true
+[VM LINE]:    0.041849042s  INFO state_unit::start:  state-unit start complete duration=264.5µs
+[VM LINE]:    0.042691625s  INFO openvmm_entry::repl:  restoring history from /Users/mac/Library/Application Support/openvmm/.openvmm_history
+[VM LINE]:    0.046004208s  WARN virt_hvf:  ignoring unknown PSCI32 call call=FastCall { number: 50, hint: false, mbz: 0, service: PSCI, smc64: false, fast: true }
+[VM LINE]:    0.047071625s  WARN virt_hvf:  returning zero for unknown system register reg=ICC_PMR_EL1
+[VM LINE]:    0.047297833s  WARN virt_hvf:  returning zero for unknown system register reg=ICC_CTLR_EL1
+[VM LINE]:    0.047301417s  WARN virt_hvf:  ignoring write to unknown system register reg=ICC_PMR_EL1 value=0x80
+[VM LINE]:    0.047303375s  WARN virt_hvf:  returning zero for unknown system register reg=ICC_PMR_EL1
+[VM LINE]:    0.047304708s  WARN virt_hvf:  ignoring write to unknown system register reg=ICC_PMR_EL1 value=0x0
+[VM LINE]:    0.048478458s  WARN virt_hvf:  returning zero for unknown system register reg=ICC_CTLR_EL1
+[VM LINE]:    0.048480625s  WARN virt_hvf:  returning zero for unknown system register reg=ICC_PMR_EL1
+[VM LINE]:    0.048482792s  WARN virt_hvf:  returning zero for unknown system register reg=ICC_CTLR_EL1
+[VM LINE]:    0.048484042s  WARN virt_hvf:  ignoring write to unknown system register reg=ICC_PMR_EL1 value=0x80
+[VM LINE]:    0.048485500s  WARN virt_hvf:  returning zero for unknown system register reg=ICC_PMR_EL1
+[VM LINE]:    0.048486792s  WARN virt_hvf:  ignoring write to unknown system register reg=ICC_PMR_EL1 value=0x0
+[VM LINE]:    0.048488458s  WARN virt_hvf:  ignoring write to unknown system register reg=ICC_PMR_EL1 value=0xf0
+[VM LINE]:    0.048489875s  WARN virt_hvf:  ignoring write to unknown system register reg=ICC_BPR1_EL1 value=0x0
+[VM LINE]:    0.048491167s  WARN virt_hvf:  ignoring write to unknown system register reg=ICC_CTLR_EL1 value=0x0
+[VM LINE]:    0.048492500s  WARN virt_hvf:  ignoring write to unknown system register reg=ICC_IGRPEN1_EL1 value=0x1
+[VM LINE]:    0.048493792s  WARN virt_hvf:  returning zero for unknown system register reg=ICC_CTLR_EL1
+[VM LINE]:    0.048719750s  INFO vmotherboard::chipset:  device io device="<unknown>" range_name="<unknown>" kind=Mmio address=0xeffe8fcc direction="read" data=[ff, ff, ff, ff]
+[VM LINE]:    0.051995750s  WARN virt_hvf:  ignoring write to unknown system register reg=SystemRegEncoding { op2: 4, crm: 3, crn: 1, op1: 0, op0: 2 } value=0x0
+[VM LINE]:    0.052003750s  WARN virt_hvf:  ignoring write to unknown system register dropped_ratelimited=0x0 reg=SystemRegEncoding { op2: 4, crm: 0, crn: 1, op1: 0, op0: 2 } value=0x0
+[VM LINE]: [    0.000000] Booting Linux on physical CPU 0x0000000000 [0x610f0000]
+[VM LINE]: [    0.000000] Linux version 6.18.38 (root@buildkitsandbox) (gcc (Debian 12.2.0-14+deb12u1) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40) #1 SMP PREEMPT Fri Oct  2 16:09:39 UTC 2026
+[VM LINE]: [    0.000000] KASLR disabled due to lack of seed
+[VM LINE]: [    0.000000] efi: EFI v2.7 by OpenVMM
+[VM LINE]: [    0.000000] efi: ACPI 2.0=0x40802000 RTPROP=0x408010d0 SMBIOS 3.0=0x408010e0 
+[VM LINE]: [    0.000000] ACPI: Early table checksum verification disabled
+[VM LINE]: [    0.000000] ACPI: RSDP 0x0000000040802000 000024 (v02 HVLITE)
+[VM LINE]: [    0.000000] ACPI: XSDT 0x0000000040803420 00004C (v01 HVLITE HVLITETB 00000000 MSHV 00000000)
+[VM LINE]: [    0.000000] ACPI: FACP 0x0000000040803130 000114 (v06 HVLITE HVLITETB 00000000 MSHV 00000000)
+[VM LINE]: [    0.000000] ACPI: DSDT 0x0000000040803000 00012A (v02 MSFTVM DSDT01   00000001 MSFT 05000000)
+[VM LINE]: [    0.000000] ACPI: APIC 0x0000000040803248 0000AC (v05 HVLITE HVLITETB 00000000 MSHV 00000000)
+[VM LINE]: [    0.000000] ACPI: SRAT 0x00000000408032F8 00006A (v03 HVLITE HVLITETB 00000000 MSHV 00000000)
+[VM LINE]: [    0.000000] ACPI: PPTT 0x0000000040803368 00004C (v01 HVLITE HVLITETB 00000000 MSHV 00000000)
+[VM LINE]: [    0.000000] ACPI: GTDT 0x00000000408033B8 000068 (v03 HVLITE HVLITETB 00000000 MSHV 00000000)
+[VM LINE]: [    0.000000] ACPI: SRAT: Node 0 PXM 0 [mem 0x40000000-0x5fffffff]
+[VM LINE]: [    0.000000] NODE_DATA(0) allocated [mem 0x5ff0a980-0x5ff0cfff]
+[VM LINE]: [    0.000000] Zone ranges:
+[VM LINE]: [    0.000000]   DMA      [mem 0x0000000040000000-0x000000005fffffff]
+[VM LINE]: [    0.000000]   DMA32    empty
+[VM LINE]: [    0.000000]   Normal   empty
+[VM LINE]: [    0.000000] Movable zone start for each node
+[VM LINE]: [    0.000000] Early memory node ranges
+[VM LINE]: [    0.000000]   node   0: [mem 0x0000000040000000-0x000000005fffffff]
+[VM LINE]: [    0.000000] Initmem setup node 0 [mem 0x0000000040000000-0x000000005fffffff]
+[VM LINE]: [    0.000000] cma: Reserved 32 MiB at 0x000000005d600000
+[VM LINE]: [    0.000000] psci: probing for conduit method from ACPI.
+[VM LINE]: [    0.000000] psci: PSCIv1.0 detected in firmware.
+[VM LINE]: [    0.000000] psci: Using standard PSCI v0.2 function IDs
+[VM LINE]: [    0.000000] psci: MIGRATE_INFO_TYPE not supported.
+[VM LINE]: [    0.000000] psci: SMC Calling Convention v1.1
+[VM LINE]: [    0.000000] ACPI: NUMA: SRAT: PXM 0 -> MPIDR 0x0 -> Node 0
+[VM LINE]: [    0.000000] percpu: Embedded 25 pages/cpu s62936 r8192 d31272 u102400
+[VM LINE]: [    0.000000] pcpu-alloc: s62936 r8192 d31272 u102400 alloc=25*4096
+[VM LINE]: [    0.000000] pcpu-alloc: [0] 0 
+[VM LINE]: [    0.000000] Detected PIPT I-cache on CPU0
+[VM LINE]: [    0.000000] CPU features: detected: Address authentication (IMP DEF algorithm)
+[VM LINE]: [    0.000000] CPU features: detected: GICv3 CPU interface
+[VM LINE]: [    0.000000] CPU features: detected: Spectre-v4
+[VM LINE]: [    0.000000] CPU features: detected: Spectre-BHB
+[VM LINE]: [    0.000000] alternatives: applying boot alternatives
+[VM LINE]: [    0.000000] Kernel command line: panic=-1 debug console=ttyAMA0
+[VM LINE]: [    0.000000] printk: log buffer data + meta data: 131072 + 458752 = 589824 bytes
+[VM LINE]: [    0.000000] Dentry cache hash table entries: 65536 (order: 7, 524288 bytes, linear)
+[VM LINE]: [    0.000000] Inode-cache hash table entries: 32768 (order: 6, 262144 bytes, linear)
+[VM LINE]: [    0.000000] software IO TLB: SWIOTLB bounce buffer size adjusted to 0MB
+[VM LINE]: [    0.000000] software IO TLB: area num 1.
+[VM LINE]: [    0.000000] software IO TLB: mapped [mem 0x000000005d580000-0x000000005d600000] (0MB)
+[VM LINE]: [    0.000000] Fallback order for Node 0: 0 
+[VM LINE]: [    0.000000] Built 1 zonelists, mobility grouping on.  Total pages: 131072
+[VM LINE]: [    0.000000] Policy zone: DMA
+[VM LINE]: [    0.000000] mem auto-init: stack:all(zero), heap alloc:off, heap free:off
+[VM LINE]: [    0.000000] SLUB: HWalign=64, Order=0-3, MinObjects=0, CPUs=1, Nodes=1
+[VM LINE]: [    0.000000] rcu: Preemptible hierarchical RCU implementation.
+[VM LINE]: [    0.000000] rcu: 	RCU event tracing is enabled.
+[VM LINE]: [    0.000000] rcu: 	RCU restricting CPUs from NR_CPUS=512 to nr_cpu_ids=1.
+[VM LINE]: [    0.000000] 	Trampoline variant of Tasks RCU enabled.
+[VM LINE]: [    0.000000] 	Tracing variant of Tasks RCU enabled.
+[VM LINE]: [    0.000000] rcu: RCU calculated value of scheduler-enlistment delay is 25 jiffies.
+[VM LINE]: [    0.000000] rcu: Adjusting geometry for rcu_fanout_leaf=16, nr_cpu_ids=1
+[VM LINE]: [    0.000000] RCU Tasks: Setting shift to 0 and lim to 1 rcu_task_cb_adjust=1 rcu_task_cpu_ids=1.
+[VM LINE]: [    0.000000] RCU Tasks Trace: Setting shift to 0 and lim to 1 rcu_task_cb_adjust=1 rcu_task_cpu_ids=1.
+[VM LINE]: [    0.000000] NR_IRQS: 64, nr_irqs: 64, preallocated irqs: 0
+[VM LINE]: [    0.000000] GICv3: 988 SPIs implemented
+[VM LINE]: [    0.000000] GICv3: 0 Extended SPIs implemented
+[VM LINE]: [    0.000000] Root IRQ handler: gic_handle_irq
+[VM LINE]: [    0.000000] GICv3: GICv3 features: 16 PPIs
+[VM LINE]: [    0.000000] GICv3: GICD_CTLR.DS=1, SCR_EL3.FIQ=1
+[VM LINE]: [    0.000000] GICv3: CPU0: found redistributor 0 region 0:0x00000000effee000
+[VM LINE]: [    0.000000] GICv2m: ACPI overriding V2M MSI_TYPER (base:928, num:64)
+[VM LINE]: [    0.000000] GICv2m: range[mem 0xeffe8000-0xeffe8fff], SPI[928:991]
+[VM LINE]: [    0.000000] rcu: srcu_init: Setting srcu_struct sizes based on contention.
+[VM LINE]: [    0.000000] GICv3: [Firmware Bug]: Illegal GSI0 translation request
+[VM LINE]: [    0.000000] GICv3: [Firmware Bug]: Illegal GSI0 translation request
+[VM LINE]: [    0.000000] arch_timer: cp15 timer running at 24.00MHz (virt).
+[VM LINE]: [    0.000000] clocksource: arch_sys_counter: mask: 0xffffffffffffff max_cycles: 0x588fe9dc0, max_idle_ns: 440795202592 ns
+[VM LINE]: [    0.000000] sched_clock: 56 bits at 24MHz, resolution 41ns, wraps every 4398046511097ns
+[VM LINE]: [    0.000058] Console: colour dummy device 80x25
+[VM LINE]: [    0.000071] ACPI: Core revision 20250807
+[VM LINE]: [    0.000088] Calibrating delay loop (skipped), value calculated using timer frequency.. 48.00 BogoMIPS (lpj=96000)
+[VM LINE]: [    0.000089] pid_max: default: 32768 minimum: 301
+[VM LINE]: [    0.000105] LSM: initializing lsm=capability
+[VM LINE]: [    0.000143] Mount-cache hash table entries: 1024 (order: 1, 8192 bytes, linear)
+[VM LINE]: [    0.000145] Mountpoint-cache hash table entries: 1024 (order: 1, 8192 bytes, linear)
+[VM LINE]: [    0.000680] rcu: Hierarchical SRCU implementation.
+[VM LINE]: [    0.000680] rcu: 	Max phase no-delay instances is 1000.
+[VM LINE]: [    0.000784] Remapping and enabling EFI services.
+[VM LINE]: [    0.000808] smp: Bringing up secondary CPUs ...
+[VM LINE]: [    0.000810] smp: Brought up 1 node, 1 CPU
+[VM LINE]: [    0.000810] SMP: Total of 1 processors activated.
+[VM LINE]: [    0.000811] CPU: All CPU(s) started at EL1
+[VM LINE]: [    0.000818] CPU features: detected: Branch Target Identification
+[VM LINE]: [    0.000819] CPU features: detected: ARMv8.4 Translation Table Level
+[VM LINE]: [    0.000820] CPU features: detected: Data cache clean to the PoU not required for I/D coherence
+[VM LINE]: [    0.000820] CPU features: detected: CRC32 instructions
+[VM LINE]: [    0.000820] CPU features: detected: Data independent timing control (DIT)
+[VM LINE]: [    0.000820] CPU features: detected: E0PD
+[VM LINE]: [    0.000821] CPU features: detected: Enhanced Privileged Access Never
+[VM LINE]: [    0.000821] CPU features: detected: Generic authentication (IMP DEF algorithm)
+[VM LINE]: [    0.000821] CPU features: detected: RCpc load-acquire (LDAPR)
+[VM LINE]: [    0.000822] CPU features: detected: LSE atomic instructions
+[VM LINE]: [    0.000822] CPU features: detected: Privileged Access Never
+[VM LINE]: [    0.000822] CPU features: detected: RAS Extension Support
+[VM LINE]: [    0.000822] CPU features: detected: Speculation barrier (SB)
+[VM LINE]: [    0.000823] CPU features: detected: TLB range maintenance instructions
+[VM LINE]: [    0.000837] alternatives: applying system-wide alternatives
+[VM LINE]: [    0.002193] Memory: 396016K/524288K available (18304K kernel code, 5442K rwdata, 13016K rodata, 11648K init, 691K bss, 93740K reserved, 32768K cma-reserved)
+[VM LINE]: [    0.002300] devtmpfs: initialized
+[VM LINE]: [    0.002439] clocksource: jiffies: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 7645041785100000 ns
+[VM LINE]: [    0.002441] posixtimers hash table entries: 512 (order: 1, 8192 bytes, linear)
+[VM LINE]: [    0.002446] futex hash table entries: 256 (16384 bytes on 1 NUMA nodes, total 16 KiB, linear).
+[VM LINE]: [    0.002465] 20432 pages in range for non-PLT usage
+[VM LINE]: [    0.002466] 511952 pages in range for PLT usage
+[VM LINE]: [    0.002483] pinctrl core: initialized pinctrl subsystem
+[VM LINE]: [    0.002600] SMBIOS 3.1.0 present.
+[VM LINE]: [    0.002603] DMI: OpenVMM OpenVMM Virtual Machine, BIOS OpenVMM Direct 06/19/2026
+[VM LINE]: [    0.002603] DMI: Memory slots populated: 0/0
+[VM LINE]: [    0.003201] NET: Registered PF_NETLINK/PF_ROUTE protocol family
+[VM LINE]: [    0.003288] DMA: preallocated 128 KiB GFP_KERNEL pool for atomic allocations
+[VM LINE]: [    0.003338] DMA: preallocated 128 KiB GFP_KERNEL|GFP_DMA pool for atomic allocations
+[VM LINE]: [    0.003382] DMA: preallocated 128 KiB GFP_KERNEL|GFP_DMA32 pool for atomic allocations
+[VM LINE]: [    0.003385] audit: initializing netlink subsys (disabled)
+[VM LINE]: [    0.003397] audit: type=2000 audit(0.000:1): state=initialized audit_enabled=0 res=1
+[VM LINE]: [    0.003462] thermal_sys: Registered thermal governor 'step_wise'
+[VM LINE]: [    0.003462] thermal_sys: Registered thermal governor 'power_allocator'
+[VM LINE]: [    0.003465] cpuidle: using governor menu
+[VM LINE]: [    0.003477] hw-breakpoint: found 6 breakpoint and 4 watchpoint registers.
+[VM LINE]: [    0.003479] ASID allocator initialised with 65536 entries
+[VM LINE]: [    0.003578] acpiphp: ACPI Hot Plug PCI Controller Driver version: 0.5
+[VM LINE]: [    0.003607] Serial: AMBA PL011 UART driver
+[VM LINE]: [    0.003680] HugeTLB: registered 1.00 GiB page size, pre-allocated 0 pages
+[VM LINE]: [    0.003680] HugeTLB: 0 KiB vmemmap can be freed for a 1.00 GiB page
+[VM LINE]: [    0.003681] HugeTLB: registered 32.0 MiB page size, pre-allocated 0 pages
+[VM LINE]: [    0.003681] HugeTLB: 0 KiB vmemmap can be freed for a 32.0 MiB page
+[VM LINE]: [    0.003681] HugeTLB: registered 2.00 MiB page size, pre-allocated 0 pages
+[VM LINE]: [    0.003681] HugeTLB: 0 KiB vmemmap can be freed for a 2.00 MiB page
+[VM LINE]: [    0.003682] HugeTLB: registered 64.0 KiB page size, pre-allocated 0 pages
+[VM LINE]: [    0.003682] HugeTLB: 0 KiB vmemmap can be freed for a 64.0 KiB page
+[VM LINE]: [    0.003857] ACPI: Added _OSI(Module Device)
+[VM LINE]: [    0.003858] ACPI: Added _OSI(Processor Device)
+[VM LINE]: [    0.003858] ACPI: Added _OSI(Processor Aggregator Device)
+[VM LINE]: [    0.003898] ACPI: 1 ACPI AML tables successfully acquired and loaded
+[VM LINE]: [    0.003920] ACPI: Interpreter enabled
+[VM LINE]: [    0.003920] ACPI: Using GIC for interrupt routing
+[VM LINE]: [    0.004446] ARMH0011:00: ttyAMA0 at MMIO 0xeffec000 (irq = 10, base_baud = 0) is a SBSA
+[VM LINE]: [    0.004460] printk: console [ttyAMA0] enabled
+[VM LINE]: [    0.012908] ARMH0011:01: ttyAMA1 at MMIO 0xeffeb000 (irq = 11, base_baud = 0) is a SBSA
+[VM LINE]: [    0.025591] ACPI: CPU0 has been hot-added
+[VM LINE]: [    0.038350] iommu: Default domain type: Translated
+[VM LINE]: [    0.038351] iommu: DMA domain TLB invalidation policy: strict mode
+[VM LINE]: [    0.038415] SCSI subsystem initialized
+[VM LINE]: [    0.042457] libata version 3.00 loaded.
+[VM LINE]: [    0.042499] ACPI: bus type USB registered
+[VM LINE]: [    0.042512] usbcore: registered new interface driver usbfs
+[VM LINE]: [    0.042516] usbcore: registered new interface driver hub
+[VM LINE]: [    0.042518] usbcore: registered new device driver usb
+[VM LINE]: [    0.042555] pps_core: LinuxPPS API ver. 1 registered
+[VM LINE]: [    0.042555] pps_core: Software ver. 5.3.6 - Copyright 2005-2007 Rodolfo Giometti <giometti@linux.it>
+[VM LINE]: [    0.042556] PTP clock support registered
+[VM LINE]: [    0.042562] EDAC MC: Ver: 3.0.0
+[VM LINE]: [    0.055057] scmi_core: SCMI protocol bus registered
+[VM LINE]: [    0.059167] FPGA manager framework
+[VM LINE]: [    0.063226] vgaarb: loaded
+[VM LINE]: [    0.063424] clocksource: Switched to clocksource arch_sys_counter
+[VM LINE]: [    0.063865] VFS: Disk quotas dquot_6.6.0
+[VM LINE]: [    0.063998] VFS: Dquot-cache hash table entries: 512 (order 0, 4096 bytes)
+[VM LINE]: [    0.064450] pnp: PnP ACPI init
+[VM LINE]: [    0.064565] pnp: PnP ACPI: found 0 devices
+[VM LINE]: [    0.065140] NET: Registered PF_INET protocol family
+[VM LINE]: [    0.065525] IP idents hash table entries: 8192 (order: 4, 65536 bytes, linear)
+[VM LINE]: [    0.066208] tcp_listen_portaddr_hash hash table entries: 256 (order: 0, 4096 bytes, linear)
+[VM LINE]: [    0.066714] Table-perturb hash table entries: 65536 (order: 6, 262144 bytes, linear)
+[VM LINE]: [    0.067113] TCP established hash table entries: 4096 (order: 3, 32768 bytes, linear)
+[VM LINE]: [    0.067763] TCP bind hash table entries: 4096 (order: 5, 131072 bytes, linear)
+[VM LINE]: [    0.068374] TCP: Hash tables configured (established 4096 bind 4096)
+[VM LINE]: [    0.068774] UDP hash table entries: 256 (order: 2, 16384 bytes, linear)
+[VM LINE]: [    0.069153] UDP-Lite hash table entries: 256 (order: 2, 16384 bytes, linear)
+[VM LINE]: [    0.069530] NET: Registered PF_UNIX/PF_LOCAL protocol family
+[VM LINE]: [    0.069913] RPC: Registered named UNIX socket transport module.
+[VM LINE]: [    0.070311] RPC: Registered udp transport module.
+[VM LINE]: [    0.070317] RPC: Registered tcp transport module.
+[VM LINE]: [    0.070321] RPC: Registered tcp-with-tls transport module.
+[VM LINE]: [    0.070324] RPC: Registered tcp NFSv4.1 backchannel transport module.
+[VM LINE]: [    0.070331] PCI: CLS 0 bytes, default 64
+[VM LINE]: [    0.072223] Unpacking initramfs...
+[VM LINE]: [    0.075443] kvm [1]: HYP mode not available
+[VM LINE]: [    0.075924] Initialise system trusted keyrings
+[VM LINE]: [    0.076271] workingset: timestamp_bits=42 max_order=17 bucket_order=0
+[VM LINE]: [    0.076813] squashfs: version 4.0 (2009/01/31) Phillip Lougher
+[VM LINE]: [    0.077285] NFS: Registering the id_resolver key type
+[VM LINE]: [    0.077578] Key type id_resolver registered
+[VM LINE]: [    0.077850] Key type id_legacy registered
+[VM LINE]: [    0.078503] nfs4filelayout_init: NFSv4 File Layout Driver Registering...
+[VM LINE]: [    0.079262] nfs4flexfilelayout_init: NFSv4 Flexfile Layout Driver Registering...
+[VM LINE]: [    0.079577] fuse: init (API version 7.45)
+[VM LINE]: [    0.079739] 9p: Installing v9fs 9p2000 file system support
+[VM LINE]: [    0.089718] Key type asymmetric registered
+[VM LINE]: [    0.091451] Asymmetric key parser 'x509' registered
+[VM LINE]: [    0.091817] Block layer SCSI generic (bsg) driver version 0.4 loaded (major 244)
+[VM LINE]: [    0.092366] io scheduler mq-deadline registered
+[VM LINE]: [    0.092622] io scheduler kyber registered
+[VM LINE]: [    0.092866] io scheduler bfq registered
+[VM LINE]: [    0.095445] ledtrig-cpu: registered to indicate activity on CPUs
+[VM LINE]: [    0.099579] Serial: 8250/16550 driver, 4 ports, IRQ sharing enabled
+[VM LINE]: [    0.100037] msm_serial: driver initialized
+[VM LINE]: [    0.100055] SuperH (H)SCI(F) driver initialized
+[VM LINE]: [    0.100063] STM32 USART driver initialized
+[VM LINE]: [    0.101855] loop: module loaded
+[VM LINE]: [    0.101926] megasas: 07.734.00.00-rc1
+[VM LINE]: [    0.102209] tun: Universal TUN/TAP device driver, 1.6
+[VM LINE]: [    0.103228] thunder_xcv, ver 1.0
+[VM LINE]: [    0.103238] thunder_bgx, ver 1.0
+[VM LINE]: [    0.103243] nicpf, ver 1.0
+[VM LINE]: [    0.103308] e1000: Intel(R) PRO/1000 Network Driver
+[VM LINE]: [    0.103314] e1000: Copyright (c) 1999-2006 Intel Corporation.
+[VM LINE]: [    0.103320] e1000e: Intel(R) PRO/1000 Network Driver
+[VM LINE]: [    0.103325] e1000e: Copyright(c) 1999 - 2015 Intel Corporation.
+[VM LINE]: [    0.103330] igb: Intel(R) Gigabit Ethernet Network Driver
+[VM LINE]: [    0.103334] igb: Copyright (c) 2007-2014 Intel Corporation.
+[VM LINE]: [    0.103341] igbvf: Intel(R) Gigabit Virtual Function Network Driver
+[VM LINE]: [    0.103344] igbvf: Copyright (c) 2009 - 2012 Intel Corporation.
+[VM LINE]: [    0.103361] sky2: driver version 1.30
+[VM LINE]: [    0.107908] VFIO - User Level meta-driver version: 0.3
+[VM LINE]: [    0.108095] usbcore: registered new interface driver usb-storage
+[VM LINE]: [    0.109323] i2c_dev: i2c /dev entries driver
+[VM LINE]: [    0.110050] sdhci: Secure Digital Host Controller Interface driver
+[VM LINE]: [    0.111439] sdhci: Copyright(c) Pierre Ossman
+[VM LINE]: [    0.111494] Synopsys Designware Multimedia Card Interface Driver
+[VM LINE]: [    0.111536] sdhci-pltfm: SDHCI platform and OF driver helper
+[VM LINE]: [    0.113062] usbcore: registered new interface driver usbhid
+[VM LINE]: [    0.113515] usbhid: USB HID core driver
+[VM LINE]: [    0.114021] No ACPI PMU IRQ for CPU0
+[VM LINE]: [    0.114490] NET: Registered PF_PACKET protocol family
+[VM LINE]: [    0.114960] 9pnet: Installing 9P2000 support
+[VM LINE]: [    0.115344] Key type dns_resolver registered
+[VM LINE]: [    0.119478] registered taskstats version 1
+[VM LINE]: [    0.119502] Loading compiled-in X.509 certificates
+[VM LINE]: [    0.120744] Demotion targets for Node 0: null
+[VM LINE]: [    0.121134] clk: Disabling unused clocks
+[VM LINE]: [    0.121468] PM: genpd: Disabling unused power domains
+􁁛  Test simultaneousRunsUseSeparateLogsAndStoppingOneLeavesOtherAlive() passed after 0.446 seconds.
+􀟈  Test runtimeTabTitlesIdentifyPayloadAndPhase() started.
+􁁛  Test silentProcessExitFreezesElapsedAndStopsSampling() passed after 0.475 seconds.
+􀟈  Test samplerReadsRealProcessAndRetainsFinalSampleAfterStop() started.
+􁁛  Test runtimeTabTitlesIdentifyPayloadAndPhase() passed after 0.001 seconds.
+􀟈  Test snapshotsTabTitleShowsRootLeaf() started.
+􁁛  Test snapshotsTabTitleShowsRootLeaf() passed after 0.001 seconds.
+􁁛  Suite WorkspaceTests passed after 0.522 seconds.
+[VM LINE]: [    0.350818] Freeing initrd memory: 33732K
+[VM LINE]: [    0.351381] Freeing unused kernel memory: 11648K
+[VM LINE]: [    0.351874] Run /init as init process
+[VM LINE]: [    0.352236]   with arguments:
+[VM LINE]: [    0.352496]     /init
+[VM LINE]: [    0.352701]   with environment:
+[VM LINE]: [    0.352974]     HOME=/
+[VM LINE]: [    0.353088]     TERM=linux
+[VM LINE]: [    0.355171] random: crng init done
+[VM LINE]: NVX-CLOCK-SYNC-OK: 1790972272
+[VM LINE]: NVX-CLOCK-SYNC-OK: 1790972272
+[VM LINE]: NVX-CLOCK-WATCH-READY
+[VM LINE]: 
+[VM LINE]: ==========================================
+[VM LINE]:  ALPINE-MICROVM-BOOT-OK: 3.24.1
+[VM LINE]:  uname: Linux (none) 6.18.38 #1 SMP PREEMPT Fri Oct  2 16:09:39 UTC 2026 aarch64 Linux
+[VM LINE]: ==========================================
+[VM LINE]: 
+[VM LINE]: NVX-GUEST-BOOT-OK: alpine
+[VM LINE]: /bin/sh: can't access tty; job control turned off
+[VM LINE]: / # [6nexport PS1=""; export PS2=""; stty -echo 2>/dev/null
+[VM LINE]: START:CB877266A3A64DE09A5C68B5E71FF93D
+[VM LINE]: HELLO_NVX
+[VM LINE]: Linux (none) 6.18.38 #1 SMP PREEMPT Fri Oct  2 16:09:39 UTC 2026 aarch64 Linux
+[VM LINE]: END:CB877266A3A64DE09A5C68B5E71FF93D:0:___
+Cold boot duration: 534.2780351638794ms, exit: 0
+Stdout:
+HELLO_NVX
+Linux (none) 6.18.38 #1 SMP PREEMPT Fri Oct  2 16:09:39 UTC 2026 aarch64 Linux
+􁁛  Test runCommandColdBoot() passed after 0.534 seconds.
+􀟈  Test runCommandWarmSnapshot() started.
+[RESTORE LINE]:    0.151805833s  INFO openvmm_helpers::snapshot::fs:  published independent snapshot artifact method="zero-scan" logical_bytes=0x20000000 source_allocated_bytes=Some(cf00000) allocated_bytes=Some(cf00000)
+[RESTORE LINE]:    0.152239666s  WARN worker_new{ name="VmWorker" action="new"}: openvmm_core::worker::dispatch:  PMU GSIV is not set
+[RESTORE LINE]:    0.152523916s  INFO worker_new{ name="VmWorker" action="new"}:post-memory partition finalization: openvmm_core::worker::dispatch:  post-memory partition finalization completed elapsed_us=0x0 success=true
+[RESTORE LINE]:    0.156107791s  INFO worker_new{ name="VmWorker" action="new"}:state_change{ operation="restore"}: state_unit:  state change complete duration=668.333µs
+[RESTORE LINE]:    0.156161541s  INFO openvmm_entry:  restoring VM from snapshot
+[RESTORE LINE]:    0.156606958s  INFO state_unit::start:  state-unit start complete duration=429.541µs
+[RESTORE LINE]:    0.156689750s  INFO openvmm_entry::repl:  restoring history from /Users/mac/Library/Application Support/openvmm/.openvmm_history
+[RESTORE LINE]: export PS1=""; export PS2=""; stty -echo 2>/dev/null
+[RESTORE LINE]: START:79B187676464417FAC765AD238D7DF77
+[RESTORE LINE]: HELLO_RESTORE
+[RESTORE LINE]: Linux (none) 6.18.38 #2 SMP PREEMPT Sat Sep 26 21:56:52 UTC 2026 aarch64 Linux
+[RESTORE LINE]: END:79B187676464417FAC765AD238D7DF77:0:___
+Warm restore duration: 211.71998977661133ms, exit: 0
+Stdout:
+HELLO_RESTORE
+Linux (none) 6.18.38 #2 SMP PREEMPT Sat Sep 26 21:56:52 UTC 2026 aarch64 Linux
+􁁛  Test runCommandWarmSnapshot() passed after 0.212 seconds.
+􀟈  Test checkpointLifecycle() started.
+􁁛  Test checkpointLifecycle() passed after 0.003 seconds.
+􁁛  Suite EngineTests passed after 0.902 seconds.
+􁁛  Test samplerReadsRealProcessAndRetainsFinalSampleAfterStop() passed after 1.136 seconds.
+􀟈  Test agentCommandCollectsActualVMMResources() started.
+VMM measured: CPU 0.008765532268467748%, RSS 351928320 bytes, disk read 8192 bytes
+􁁛  Test agentCommandCollectsActualVMMResources() passed after 2.522 seconds.
+􁁛  Suite InstrumentTests passed after 4.179 seconds.
+􁁛  Test run with 36 tests in 6 suites passed after 4.179 seconds.

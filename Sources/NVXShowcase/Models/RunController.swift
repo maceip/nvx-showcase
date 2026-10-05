@@ -13,7 +13,14 @@ final class RunController {
         case done = "Done"
     }
 
-    var phase: Phase = .idle
+    var phase: Phase = .idle {
+        didSet {
+            if phase == .done {
+                endedAt = Date()
+                resources.stop()
+            }
+        }
+    }
     var consoleLines: [String] = []
     var events: [GuestEvent] = []
     var attempted = 0
@@ -22,6 +29,24 @@ final class RunController {
     var payload: Payload = .exfiltrator
     /// Snapshot directory captured by the last save run, if any.
     var savedSnapshotURL: URL?
+    let resources = RuntimeResourceMonitor()
+    private(set) var allocation = GuestAllocation()
+    private(set) var startedAt: Date?
+    private(set) var endedAt: Date?
+
+    var displayStatus: String {
+        switch phase {
+        case .idle: "STANDBY"
+        case .launching: "STARTING"
+        case .live: verdict.rawValue
+        case .done: verdict.rawValue
+        }
+    }
+
+    func elapsed(at date: Date) -> TimeInterval {
+        guard let startedAt else { return 0 }
+        return max(0, (endedAt ?? date).timeIntervalSince(startedAt))
+    }
 
     private var process: Process?
     private var timer: Timer?
@@ -66,6 +91,9 @@ final class RunController {
             "--save-snapshot", dir.path,
             "--save-on", marker,
             "--save-timeout", String(timeoutSeconds),
+            // nvx.py raises an omitted HVF size to 2048 MiB. Pin the size
+            // so it matches the backing file created below.
+            "--memory-mib", "512",
         ], saveTarget: dir, backingFileName: "membacking.bin")
         return true
     }
@@ -74,6 +102,7 @@ final class RunController {
     func runAgentCommand(_ command: String, preferWarmSnapshot: Bool = true) async {
         guard phase == .idle || phase == .done else { return }
         reset()
+        startedAt = Date()
         phase = .launching
         verdict = .running
         events.append(GuestEvent(kind: .info, text: "Launching agent command: \(command)"))
@@ -83,6 +112,13 @@ final class RunController {
             let res = try await NVXEngine.shared.runCommand(
                 command: command,
                 preferWarmSnapshot: preferWarmSnapshot,
+                onLaunch: { [weak self] pid, arguments in
+                    Task { @MainActor in
+                        guard let self, self.phase == .live else { return }
+                        self.allocation.ingest(command: ">> openvmm " + arguments.joined(separator: " "))
+                        self.resources.start(rootPID: pid, directVMM: true)
+                    }
+                },
                 onOutput: { [weak self] line in
                     Task { @MainActor in
                         self?.consoleLines.append(line)
@@ -102,6 +138,8 @@ final class RunController {
             verdict = .failed
         }
         phase = .done
+        endedAt = Date()
+        resources.stop()
     }
 
     /// Resolve `dir` through any symlinked parent components (/tmp on
@@ -118,6 +156,7 @@ final class RunController {
                           backingFileName: String? = nil) {
         guard phase == .idle || phase == .done else { return }
         reset()
+        startedAt = Date()
         saveTargetURL = saveTarget
         phase = .launching
 
@@ -146,8 +185,8 @@ final class RunController {
         var extraArgs = extraArgs
         if let backingFileName {
             // Fresh hvf boots need file-backed guest RAM before the REPL
-            // can save. nvx.py floors hvf runs at 512 MiB, so a sparse
-            // file that size always covers the UI's fixed memory shape.
+            // can save. The save path pins --memory-mib 512, and this
+            // sparse file must be that exact size.
             let backing = dir.appending(path: backingFileName)
             do {
                 FileManager.default.createFile(atPath: backing.path, contents: nil)
@@ -167,10 +206,8 @@ final class RunController {
         }
 
         let proc = Process()
-        // /usr/bin/python3 is Apple Python 3.9 (no dataclass slots);
-        // resolve the modern interpreter off PATH instead.
-        proc.executableURL = URL(fileURLWithPath: "/usr/bin/env")
-        proc.arguments = ["python3",
+        proc.executableURL = RepoRoot.python3(near: repo)
+        proc.arguments = ["-u",
                           repo.appending(path: "scripts/nvx.py").path,
                           "run", "--hypervisor", "hvf"] + payload.arguments + extraArgs
         proc.standardInput = FileHandle.nullDevice
@@ -187,6 +224,7 @@ final class RunController {
             return
         }
         process = proc
+        resources.start(rootPID: proc.processIdentifier)
         logReader = try? FileHandle(forReadingFrom: log)
         phase = .live
 
@@ -203,6 +241,10 @@ final class RunController {
     }
 
     private func reset() {
+        resources.stop(clear: true)
+        allocation = GuestAllocation()
+        startedAt = nil
+        endedAt = nil
         if let proc = process { RepoRoot.killProcessTree(proc, graceSeconds: 0) }
         process = nil
         timer?.invalidate()
@@ -242,6 +284,13 @@ final class RunController {
     }
 
     private func drain() {
+        // A quiet exit must finish the status and clock even with no new bytes.
+        defer {
+            if let proc = process, !proc.isRunning {
+                process = nil
+                finish()
+            }
+        }
         guard let reader = logReader else { return }
         do {
             let end = try reader.seekToEnd()
@@ -260,6 +309,7 @@ final class RunController {
         for raw in text.components(separatedBy: "\n") {
             let line = raw.trimmingCharacters(in: .whitespacesAndNewlines)
             guard !line.isEmpty else { continue }
+            allocation.ingest(command: line)
             consoleLines.append(StreamParser.displayText(for: line))
             if let kind = StreamParser.guestEvent(for: line) {
                 events.append(GuestEvent(kind: kind, text: line))
@@ -282,12 +332,6 @@ final class RunController {
             consoleLines.removeFirst(consoleLines.count - 4000)
         }
         updateVerdict()
-        if let proc = process, !proc.isRunning {
-            // The shim exited; make sure no openvmm child lingers.
-            RepoRoot.killProcessTree(proc, graceSeconds: 0)
-            process = nil
-            finish()
-        }
     }
 
     private func updateVerdict() {
@@ -300,6 +344,8 @@ final class RunController {
     }
 
     private func finish() {
+        resources.stop()
+        endedAt = Date()
         timer?.invalidate()
         timer = nil
         drain()

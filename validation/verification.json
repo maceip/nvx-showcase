@@ -1,0 +1,127 @@
+{
+  "verifiedAt": "2026-10-02T11:51:58.536634+00:00",
+  "swiftTests": 11,
+  "releaseBuild": "passed",
+  "codeSignature": "verified",
+  "cuAEnvironment": "isolated macOS 26.5.2 VM; no host desktop input",
+  "initialCuaChecks": [
+    {
+      "passed": true,
+      "check": "Starts with Runtime and Snapshots in the native strip"
+    },
+    {
+      "passed": true,
+      "check": "Snapshots sidebar collapses"
+    },
+    {
+      "passed": true,
+      "check": "Runtime controls remain available"
+    },
+    {
+      "passed": true,
+      "check": "Snapshot page local state survives switching"
+    },
+    {
+      "passed": true,
+      "check": "Inactive pinned tab collapses to its icon"
+    },
+    {
+      "passed": true,
+      "check": "Native drag reorders right on release"
+    },
+    {
+      "passed": true,
+      "check": "Native drag reverses and reorders left"
+    },
+    {
+      "passed": true,
+      "check": "Tear-off creates exactly one native window"
+    },
+    {
+      "passed": true,
+      "check": "Source retains its Runtime page"
+    },
+    {
+      "passed": true,
+      "check": "Detached window owns the original Snapshots page"
+    },
+    {
+      "passed": true,
+      "check": "Collapsed sidebar survives window detachment"
+    },
+    {
+      "passed": true,
+      "check": "A single tab cannot detach or drag its window"
+    },
+    {
+      "passed": true,
+      "check": "Command-T targets the detached window"
+    },
+    {
+      "passed": true,
+      "check": "Dragging into the source strip reattaches the same page"
+    },
+    {
+      "passed": true,
+      "check": "Transferred tab becomes selected in destination"
+    },
+    {
+      "passed": true,
+      "check": "Page local state survives reattachment"
+    },
+    {
+      "passed": true,
+      "check": "Closing the other window leaves both transferred source pages intact"
+    },
+    {
+      "passed": true,
+      "check": "Sixteen native tabs remain mounted under overflow"
+    },
+    {
+      "passed": true,
+      "check": "Repeated close leaves the original pages intact"
+    }
+  ],
+  "runtimeProcessCheck": "Two isolated local fixture subprocesses; separate logs, stopping one leaves the other alive. No NVX guest workloads launched.",
+  "app": "/Users/mac/nvx/showcase/dist/NVXShowcase.app",
+  "binarySHA256": "50854e2097254f537fa3eff0f3bf9a6f50075544f8c16ba18c35518b53fd8dc8",
+  "sources": {
+    "showcase/Package.swift": "43d196abf9d7a22693f72fe9e561c1fba657b3f332661cbe83b3791943573fd6",
+    "showcase/assemble.sh": "f4b72dc997a26f20a2c0d046eeb89f91cb578fc0497baeade2e2902c6dd96a0e",
+    "showcase/Sources/NVXShowcase/Models/Events.swift": "2ec43be8b35fc3102227fbabfec7b4ed9654c159a56b3a43f6ffdc318a73ec99",
+    "showcase/Sources/NVXShowcase/Models/RepoRoot.swift": "bd0a1539253b40a90cb5c3fd378a20a8577e06d993b041b930355a8dbbdf4cf6",
+    "showcase/Sources/NVXShowcase/Models/RunController.swift": "f775b2146bc6f68cd9646d5df16622c1a59dc0901aaf5e3819d3b3446b139ed7",
+    "showcase/Sources/NVXShowcase/Models/SnapshotStore.swift": "02c24ffd498f29e570b367eddb5c9def8c85ae6aafe4011d05f828fd78c917ad",
+    "showcase/Sources/NVXShowcase/Models/StreamParser.swift": "de17eb72bd37c20ae0ad3a24f4b8753ea1b81e3b9854d43064afff56a14ffd83",
+    "showcase/Sources/NVXShowcase/NVXShowcaseApp.swift": "6a713f32a6c070e1ccdfdd72e7fedbe189efa0db90f39f1bd6a4ab5f75e190a3",
+    "showcase/Sources/NVXShowcase/Tabs/Pie/CompactTabStrip.swift": "f1c1658ac0ab57c8c7b3df0346c3499b4e1dee5d091bcfab7d6f571870547a0c",
+    "showcase/Sources/NVXShowcase/Tabs/Pie/TabStripGeometry.swift": "3670985dac9fa53cb49dbab5008bf87d8e0f7bb56c280dfde4981adf36366278",
+    "showcase/Sources/NVXShowcase/Tabs/Pie/TitlebarControlLayout.swift": "1c360886d21c2cfad63b78ea7a14140bf555fed69510ed9daf0d12a6131921be",
+    "showcase/Sources/NVXShowcase/Tabs/ShowcaseWindows.swift": "98cd17979c90f046db35096f2e13f0263be31cab70ba6647723705a8369da6d0",
+    "showcase/Sources/NVXShowcase/Tabs/ShowcaseWorkspace.swift": "8e6876ad16c2621826126faea472fd5fe7fc6b4d8268ad28187cf3c1f76d160f",
+    "showcase/Sources/NVXShowcase/Views/ContentView.swift": "b3d3d5c3c9340ecf1f5f7b247355861f21b4bff7e77fd9db40190f8d5127af98",
+    "showcase/Sources/NVXShowcase/Views/LiveView.swift": "7494dafcdf715cc807c951c1ded782a0527ef357f50118b2f2920f074c87024b",
+    "showcase/Sources/NVXShowcase/Views/SnapshotBrowserView.swift": "ab0650b28ce9135998c25e50fa6673466a5c62a76e771a9d72f71df9d14601e3",
+    "showcase/Tests/NVXShowcaseTests/WorkspaceTests.swift": "0722c5d92e3f820dc5f70bd5dfc1c6fccc5aed77217914c12d2095e53e3a8f70"
+  },
+  "finalCuaChecks": [
+    {
+      "passed": true,
+      "check": "Final build: hidden sidebar survives detachment"
+    },
+    {
+      "passed": true,
+      "check": "Final build: reattached page retains its hidden sidebar"
+    },
+    {
+      "passed": true,
+      "check": "Final build: 16 tabs with selected Runtime title width sufficient to show the full word",
+      "fieldWidth": 58.0
+    },
+    {
+      "passed": true,
+      "check": "Final build: repeated close preserves Runtime and Snapshots"
+    }
+  ],
+  "hostLaunch": "Opened in background; PID 2828 observed running the assembled application"
+}

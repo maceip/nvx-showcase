@@ -1,0 +1,78 @@
+[
+  {
+    "passed": true,
+    "check": "Starts with Runtime and Snapshots in the native strip"
+  },
+  {
+    "passed": true,
+    "check": "Snapshots sidebar collapses"
+  },
+  {
+    "passed": true,
+    "check": "Runtime controls remain available"
+  },
+  {
+    "passed": true,
+    "check": "Snapshot page local state survives switching"
+  },
+  {
+    "passed": true,
+    "check": "Inactive pinned tab collapses to its icon"
+  },
+  {
+    "passed": true,
+    "check": "Native drag reorders right on release"
+  },
+  {
+    "passed": true,
+    "check": "Native drag reverses and reorders left"
+  },
+  {
+    "passed": true,
+    "check": "Tear-off creates exactly one native window"
+  },
+  {
+    "passed": true,
+    "check": "Source retains its Runtime page"
+  },
+  {
+    "passed": true,
+    "check": "Detached window owns the original Snapshots page"
+  },
+  {
+    "passed": true,
+    "check": "Collapsed sidebar survives window detachment"
+  },
+  {
+    "passed": true,
+    "check": "A single tab cannot detach or drag its window"
+  },
+  {
+    "passed": true,
+    "check": "Command-T targets the detached window"
+  },
+  {
+    "passed": true,
+    "check": "Dragging into the source strip reattaches the same page"
+  },
+  {
+    "passed": true,
+    "check": "Transferred tab becomes selected in destination"
+  },
+  {
+    "passed": true,
+    "check": "Page local state survives reattachment"
+  },
+  {
+    "passed": true,
+    "check": "Closing the other window leaves both transferred source pages intact"
+  },
+  {
+    "passed": true,
+    "check": "Sixteen native tabs remain mounted under overflow"
+  },
+  {
+    "passed": true,
+    "check": "Repeated close leaves the original pages intact"
+  }
+]

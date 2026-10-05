@@ -15,6 +15,7 @@ struct CompactTabItem: Identifiable, Equatable {
     var isPinned = false
     var reloadTitle: String? = "Refresh Sessions"
     var addressLabel: String = "Tab address and search"
+    var hoverContent: CompactTabHoverContent? = nil
 }
 
 struct CompactTabStrip: NSViewRepresentable {
@@ -25,9 +26,11 @@ struct CompactTabStrip: NSViewRepresentable {
     var onInsert: () -> Void
     var onMove: (UUID, Int) -> Void
     var onDetach: (UUID, NSPoint) -> Void
-    var onSearch: (String) -> Void
-    var onReload: () -> Void
+    var onSearch: (String) -> Void = { _ in }
+    var onReload: () -> Void = {}
     var onSetPinned: (UUID, Bool) -> Void = { _, _ in }
+    var labelMode: CompactTabLabelMode = .fixed
+    var hoverPreview: CompactTabHoverConfiguration? = .init()
     var previewSourceView: NSView? = nil
     var transferOwner: AnyObject? = nil
     var onTransfer: (UUID, CompactTabStripView, Int) -> Bool = { _, _, _ in false }
@@ -42,6 +45,8 @@ struct CompactTabStrip: NSViewRepresentable {
         view.onSelect = onSelect; view.onClose = onClose; view.onInsert = onInsert
         view.onMove = onMove; view.onDetach = onDetach; view.onSearch = onSearch; view.onReload = onReload
         view.onSetPinned = onSetPinned
+        view.labelMode = labelMode
+        view.hoverPreview = hoverPreview
         view.previewSourceView = previewSourceView
         view.transferOwner = transferOwner; view.onTransfer = onTransfer
         view.configure(items: items, selection: selection)
@@ -60,6 +65,26 @@ final class CompactTabStripView: NSView {
     var onSearch: (String) -> Void = { _ in }
     var onReload: () -> Void = {}
     var onSetPinned: (UUID, Bool) -> Void = { _, _ in }
+    var labelMode: CompactTabLabelMode = .fixed {
+        didSet {
+            guard oldValue != labelMode else { return }
+            hoverPreviewController?.dismiss()
+            clearDrag()
+            configure(items: items, selection: selection)
+        }
+    }
+    var hoverPreview: CompactTabHoverConfiguration? = .init() {
+        didSet { if oldValue != hoverPreview { hoverPreviewController?.dismiss() } }
+    }
+    private var hoverPreviewController: CompactTabHoverPreview?
+    var visibleHoverPreview: NSPanel? { hoverPreviewController?.visiblePanel }
+    func beginHoverPreview(over cell: CompactTabCell) {
+        guard hoverPreview != nil else { return }
+        if hoverPreviewController == nil { hoverPreviewController = CompactTabHoverPreview() }
+        hoverPreviewController?.begin(over: cell)
+    }
+    func endHoverPreview(over cell: CompactTabCell) { hoverPreviewController?.leave(cell) }
+    func refreshHoverPreview(over cell: CompactTabCell) { hoverPreviewController?.refresh(cell) }
     weak var transferOwner: AnyObject?
     var onTransfer: (UUID, CompactTabStripView, Int) -> Bool = { _, _, _ in false }
     private let scroll = NSScrollView()
@@ -89,6 +114,7 @@ final class CompactTabStripView: NSView {
     private var eventMonitor: Any?
     private var focusDismissMonitor: Any?
     private var windowObserver: NSObjectProtocol?
+    private var windowDragGuard: TabStripWindowDragGuard?
     private weak var dropTarget: CompactTabStripView?
     private var isSettling = false
     private var dragWidths: [UUID: CGFloat]?
@@ -171,17 +197,22 @@ final class CompactTabStripView: NSView {
     }
     override func viewDidMoveToWindow() {
         super.viewDidMoveToWindow()
+        hoverPreviewController?.dismiss()
+        windowDragGuard?.detach(self)
+        windowDragGuard = nil
         if let windowObserver { NotificationCenter.default.removeObserver(windowObserver) }
         if let focusDismissMonitor { NSEvent.removeMonitor(focusDismissMonitor) }
         focusDismissMonitor = nil
         Self.strips.removeAll { $0.value == nil || $0.value === self }
         if let window {
+            windowDragGuard = TabStripWindowDragGuard.attach(self, to: window)
             Self.strips.append(WeakStrip(self))
             // Buttons and ordinary content do not necessarily take first
             // responder. End address editing before forwarding their click so
             // focus decoration cannot remain on the selected tab afterward.
             focusDismissMonitor = NSEvent.addLocalMonitorForEvents(matching: [.leftMouseDown, .rightMouseDown]) { [weak self] event in
                 guard let self, event.window === self.window else { return event }
+                self.hoverPreviewController?.dismiss()
                 self.cells[self.selection]?.dismissAddressForOutsideClick(event)
                 return event
             }
@@ -189,6 +220,7 @@ final class CompactTabStripView: NSView {
                 // A window may close independently while a drop is settling.
                 // Keep that panel alive until the destination handoff finishes.
                 guard let self else { return }
+                MainActor.assumeIsolated { self.hoverPreviewController?.dismiss() }
                 guard !self.isSettling else { return }
                 self.clearDrag()
             }
@@ -233,7 +265,7 @@ final class CompactTabStripView: NSView {
         if pinsChanged {
             releaseCloseWidths()
         }
-        let focusesInsertedTab = !self.items.isEmpty && !self.items.contains { $0.id == selection }
+        let focusesInsertedTab = labelMode == .address && !self.items.isEmpty && !self.items.contains { $0.id == selection }
             && items.contains { $0.id == selection && $0.address.isEmpty && !$0.isPinned }
             && insertionIndex == nil && dragID == nil
         if items.count < self.items.count, !pinsChanged, pointerInside, dragPanel == nil, frozenCloseWidths == nil { lockCloseWidths() }
@@ -290,7 +322,7 @@ final class CompactTabStripView: NSView {
         // Entering a different window reserves space without deselecting its
         // current tab. The incoming pill becomes active only when released.
         let visualSelection = settlingSelectionID ?? selection
-        let activeIsEmpty = visualSelection == reservedID ? reservedIsEmpty : (items.first { $0.id == visualSelection }?.address.isEmpty ?? true)
+        let activeIsEmpty = labelMode == .address && (visualSelection == reservedID ? reservedIsEmpty : (items.first { $0.id == visualSelection }?.address.isEmpty ?? true))
         let pinOrder = order.filter { pinnedIDs.contains($0) }
         let normalOrder = order.filter { !pinnedIDs.contains($0) }
         let activePinWidth = TabStripGeometry.restingWidths(available: viewportWidth, count: count,
@@ -405,8 +437,9 @@ final class CompactTabStripView: NSView {
     }
     func beginDrag(_ id: UUID, event: NSEvent) {
         guard !isSettling, let cell = cells[id] else { return }
+        hoverPreviewController?.dismiss()
         clearDrag()
-        clickEditsAddress = cell.selected
+        clickEditsAddress = cell.selected && labelMode == .address
         onSelect(id)
         if selection != id { configure(items: items, selection: id) }
         dragID = id; dragOrigin = screenPoint(event)
@@ -737,6 +770,11 @@ final class CompactTabStripView: NSView {
     }
     override func mouseDown(with event: NSEvent) {}
     deinit {
+        let hoverPreview = hoverPreviewController
+        Task { @MainActor in hoverPreview?.dismiss() }
+        let dragGuard = windowDragGuard
+        let stripID = ObjectIdentifier(self)
+        Task { @MainActor in dragGuard?.detach(stripID) }
         if let eventMonitor { NSEvent.removeMonitor(eventMonitor) }
         if let focusDismissMonitor { NSEvent.removeMonitor(focusDismissMonitor) }
         if let windowObserver { NotificationCenter.default.removeObserver(windowObserver) }
@@ -771,6 +809,9 @@ final class CompactTabCell: NSView, NSTextFieldDelegate {
         }
     }
     private var isSingleTab: Bool { owner?.items.count == 1 }
+    private var allowsAddressEditing: Bool { owner?.labelMode == .address }
+    private var displayValue: String { allowsAddressEditing ? item.address : item.title }
+    private var isEmptyAddress: Bool { allowsAddressEditing && item.address.isEmpty }
     var iconsOnly = false { didSet { if oldValue != iconsOnly { needsLayout = true } } }
     private(set) var isEditingAddress = false
     override var mouseDownCanMoveWindow: Bool { false }
@@ -854,21 +895,28 @@ final class CompactTabCell: NSView, NSTextFieldDelegate {
         if window != nil { configure(item: item, selected: selected) }
     }
     func configure(item: CompactTabItem, selected: Bool) {
+        if !allowsAddressEditing {
+            if isEditingAddress { window?.makeFirstResponder(nil); setAddressFocus(false) }
+            addressDraft = nil
+        }
         if self.selected && !selected && isEditingAddress { window?.makeFirstResponder(nil) }
         if item.address != self.item.address { addressDraft = nil }
         self.item = item; self.selected = selected
-        address.setAccessibilityLabel(item.addressLabel)
+        address.isEditable = allowsAddressEditing
+        address.isSelectable = allowsAddressEditing
+        address.setAccessibilityLabel(allowsAddressEditing ? item.addressLabel : "Tab label")
         reload.setAccessibilityLabel(item.reloadTitle ?? "Refresh")
         reload.toolTip = item.reloadTitle
+        address.lineBreakMode = allowsAddressEditing ? .byClipping : .byTruncatingTail
         effectiveAppearance.performAsCurrentDrawingAppearance {
             let dark = effectiveAppearance.bestMatch(from: [.darkAqua, .aqua]) == .darkAqua
             address.textColor = NSColor.labelColor.withAlphaComponent(0.9)
-            address.font = .systemFont(ofSize: 13, weight: item.address.isEmpty ? .medium : .regular)
+            address.font = .systemFont(ofSize: 13, weight: isEmptyAddress ? .medium : .regular)
             let titleStyle = NSMutableParagraphStyle()
             titleStyle.lineBreakMode = .byTruncatingTail
             let titleColor = dark ? NSColor(srgbRed: 220/255, green: 220/255, blue: 222/255, alpha: 1) : NSColor.labelColor
             title.attributedStringValue = NSAttributedString(string: item.title, attributes: [.font: title.font!, .kern: -0.2, .foregroundColor: titleColor, .paragraphStyle: titleStyle])
-            if address.currentEditor() == nil { address.stringValue = addressDraft ?? item.address }
+            if address.currentEditor() == nil { address.stringValue = addressDraft ?? displayValue }
             let placeholderStyle = NSMutableParagraphStyle()
             placeholderStyle.lineBreakMode = .byClipping
             let hintColor = dark ? NSColor(srgbRed: 150/255, green: 152/255, blue: 155/255, alpha: 1) : NSColor.secondaryLabelColor
@@ -876,22 +924,23 @@ final class CompactTabCell: NSView, NSTextFieldDelegate {
             address.placeholderAttributedString = nil
             placeholder.attributedStringValue = hint
             placeholder.textColor = hintColor
-            if !isEditingAddress { address.alignment = item.address.isEmpty ? .left : .center }
-            let showsIdentity = item.isPinned || !selected || (!isEditingAddress && !item.address.isEmpty)
+            if !isEditingAddress { address.alignment = isEmptyAddress ? .left : .center }
+            let showsIdentity = !allowsAddressEditing || item.isPinned || !selected || (!isEditingAddress && !item.address.isEmpty)
             if showsIdentity, let image = item.iconImage {
                 icon.image = image; icon.contentTintColor = nil
             } else if showsIdentity, let letter = item.faviconLetter {
                 icon.image = Self.letterIcon(letter)
                 icon.contentTintColor = nil
             } else {
-                let symbol = NSImage(systemSymbolName: selected ? (item.isTrusted ? "lock" : "magnifyingglass") : item.symbol, accessibilityDescription: nil)
-                icon.image = symbol?.withSymbolConfiguration(.init(pointSize: selected ? 12 : 15, weight: .regular))
+                let symbol = NSImage(systemSymbolName: selected && allowsAddressEditing ? (item.isTrusted ? "lock" : "magnifyingglass") : item.symbol, accessibilityDescription: nil)
+                icon.image = symbol?.withSymbolConfiguration(.init(pointSize: selected && allowsAddressEditing ? 12 : 15, weight: .regular))
                 icon.contentTintColor = NSColor.labelColor.withAlphaComponent(selected ? 0.5 : 0.64)
             }
         }
         setAccessibilityLabel(item.title); setAccessibilityValue(selected ? 1 : 0)
         setAccessibilityHelp(item.isPinned ? "Pinned tab. Use the context menu to unpin." : nil)
-        toolTip = item.address.isEmpty ? item.title : item.address
+        toolTip = nil
+        owner?.refreshHoverPreview(over: self)
         needsLayout = true; needsDisplay = true
     }
     override func layout() {
@@ -916,18 +965,18 @@ final class CompactTabCell: NSView, NSTextFieldDelegate {
         icon.frame = selected ? NSRect(x: 10, y: 7 + dy, width: 16, height: 16)
             : NSRect(x: iconsOnly ? (w - 16) / 2 : contentX + 2, y: item.faviconLetter == nil ? 11 : 10, width: 16, height: 16)
         title.frame = NSRect(x: contentX + 21, y: 6, width: titleWidth, height: 20)
-        let searching = selected && (isEditingAddress || item.address.isEmpty)
-        address.displaysTabAddress = selected && !searching
+        let searching = selected && allowsAddressEditing && (isEditingAddress || item.address.isEmpty)
+        address.displaysTabAddress = selected && allowsAddressEditing && !searching
         address.cell?.isScrollable = searching
         address.frame = NSRect(x: 30, y: 4 + dy, width: max(0, w - (searching ? 36 : (hovering ? 85 : 63))), height: 19)
-        placeholder.isHidden = !selected || !address.stringValue.isEmpty
+        placeholder.isHidden = !selected || !isEmptyAddress || !address.stringValue.isEmpty
         placeholder.frame = address.frame
         if selected && !searching {
             icon.frame.origin.x = 30
             address.frame = NSRect(x: 51, y: 4 + dy, width: max(0, w - 108), height: 19)
             address.alignment = .right
         }
-        if selected && item.address.isEmpty && address.stringValue.isEmpty {
+        if selected && isEmptyAddress && address.stringValue.isEmpty {
             let placeholderWidth = (item.searchPrompt as NSString).size(withAttributes: [.font: address.font!]).width + 4
             if placeholderWidth + 24 < w - 20 {
                 let start = (w - placeholderWidth - 24) / 2
@@ -938,31 +987,32 @@ final class CompactTabCell: NSView, NSTextFieldDelegate {
             }
         }
         if selected && !searching {
-            let textWidth = ceil((item.address as NSString).size(withAttributes: [.font: address.font!]).width) + 4
+            let textWidth = ceil((displayValue as NSString).size(withAttributes: [.font: address.font!]).width)
+                + (allowsAddressEditing ? 4 : 12) // The static NSTextField includes its native text inset.
             if textWidth + 21 < w - 100 {
                 let start = (w - textWidth - 21) / 2 - 2
                 icon.frame.origin.x = start
                 address.frame = NSRect(x: start + 21, y: 4 + dy, width: textWidth, height: 19)
                 address.alignment = .center
             }
+        }
             // A compressed tab must not reserve space for invisible controls.
             // Keep the title readable at the 120pt minimum; hover still makes
             // room for the close/refresh buttons without changing tab geometry.
-            if w < 180 {
-                let showsClose = !item.isPinned && !isSingleTab && (hovering || capturesDragForeground)
-                let showsReload = item.reloadTitle != nil && !item.isBusy && (hovering || capturesDragForeground)
-                let leading: CGFloat = showsClose ? 30 : 10
-                let trailing: CGFloat = 29 + (showsReload || item.isBusy ? 22 : 0)
-                icon.frame.origin.x = leading
-                address.frame = NSRect(x: leading + 21, y: 4 + dy,
-                    width: max(0, w - leading - 21 - trailing), height: 19)
-                address.alignment = .center
-            }
+        if selected && !searching && w < 180 {
+            let showsClose = !item.isPinned && !isSingleTab && (hovering || capturesDragForeground)
+            let showsReload = item.reloadTitle != nil && !item.isBusy && (hovering || capturesDragForeground)
+            let leading: CGFloat = showsClose ? 30 : 10
+            let trailing: CGFloat = 29 + (showsReload || item.isBusy ? 22 : 0)
+            icon.frame.origin.x = leading
+            address.frame = NSRect(x: leading + 21, y: 4 + dy,
+                width: max(0, w - leading - 21 - trailing), height: 19)
+            address.alignment = .center
         }
-        if selected && !isEditingAddress && !item.address.isEmpty && address.currentEditor() == nil {
+        if selected && !isEditingAddress && !displayValue.isEmpty && address.currentEditor() == nil {
             let style = NSMutableParagraphStyle()
-            style.alignment = address.alignment; style.lineBreakMode = .byClipping
-            let value = NSAttributedString(string: item.address, attributes: [.font: address.font!, .foregroundColor: address.textColor!, .paragraphStyle: style])
+            style.alignment = address.alignment; style.lineBreakMode = allowsAddressEditing ? .byClipping : .byTruncatingTail
+            let value = NSAttributedString(string: displayValue, attributes: [.font: address.font!, .foregroundColor: address.textColor!, .paragraphStyle: style])
             if address.attributedStringValue != value { address.attributedStringValue = value }
         }
         actions.frame = NSRect(x: w - 27, y: 6 + dy, width: 18, height: 18)
@@ -990,7 +1040,7 @@ final class CompactTabCell: NSView, NSTextFieldDelegate {
             }
             let path = NSBezierPath(roundedRect: bounds.insetBy(dx: 3.5, dy: 3.5), xRadius: 15, yRadius: 15)
             let alpha: CGFloat = isSingleTab ? (hovering || isEditingAddress ? 0.19 : 0.16)
-                : (item.address.isEmpty ? (hovering || isEditingAddress ? 0.15 : 0.13) : (hovering ? 0.16 : 0.14))
+                : (isEmptyAddress ? (hovering || isEditingAddress ? 0.15 : 0.13) : (hovering ? 0.16 : 0.14))
             let lightAlpha: CGFloat = isSingleTab && isEditingAddress ? 0.5 : 0.7
             NSColor.white.withAlphaComponent(dark ? alpha : lightAlpha).setFill(); path.fill()
             (dark ? NSColor.labelColor.withAlphaComponent(0.27) : NSColor.white.withAlphaComponent(0.85)).setStroke()
@@ -1032,8 +1082,16 @@ final class CompactTabCell: NSView, NSTextFieldDelegate {
             return true
         }
     }
-    override func mouseEntered(with event: NSEvent) { hovering = pointerIsInside ?? (owner?.isDragging != true); needsLayout = true; needsDisplay = true }
-    override func mouseExited(with event: NSEvent) { hovering = pointerIsInside ?? false; needsLayout = true; needsDisplay = true }
+    override func mouseEntered(with event: NSEvent) {
+        hovering = pointerIsInside ?? (owner?.isDragging != true)
+        if hovering { owner?.beginHoverPreview(over: self) }
+        needsLayout = true; needsDisplay = true
+    }
+    override func mouseExited(with event: NSEvent) {
+        hovering = pointerIsInside ?? false
+        owner?.endHoverPreview(over: self)
+        needsLayout = true; needsDisplay = true
+    }
     override func hitTest(_ point: NSPoint) -> NSView? {
         let hit = super.hitTest(point)
         // Labels and icons must forward drags to the tab; controls keep native events.
@@ -1158,6 +1216,7 @@ final class CompactTabCell: NSView, NSTextFieldDelegate {
         return image
     }
     func focusAddress(haloDelay: TimeInterval = 0.045) {
+        guard allowsAddressEditing else { return }
         nextHaloDelay = haloDelay
         window?.makeFirstResponder(address)
         address.currentEditor()?.selectedRange = NSRange(location: address.stringValue.utf16.count, length: 0)
@@ -1178,6 +1237,7 @@ final class CompactTabCell: NSView, NSTextFieldDelegate {
         setAddressFocus(false)
     }
     func control(_ control: NSControl, textView: NSTextView, doCommandBy selector: Selector) -> Bool {
+        guard allowsAddressEditing else { return false }
         if selector == #selector(NSResponder.insertNewline(_:)) {
             owner?.onSearch(address.stringValue); window?.makeFirstResponder(nil); return true
         }
@@ -1194,6 +1254,7 @@ final class CompactTabCell: NSView, NSTextFieldDelegate {
 /// character, while the empty focused field already needs its ring and inset.
 final class CompactAddressField: NSTextField {
     override var mouseDownCanMoveWindow: Bool { false }
+    override var acceptsFirstResponder: Bool { isEditable && super.acceptsFirstResponder }
     var displaysTabAddress = false { didSet { if oldValue != displaysTabAddress { needsDisplay = true } } }
     var onFocusChange: (Bool) -> Void = { _ in }
     var onBeginTabDrag: (NSEvent) -> Void = { _ in }
@@ -1229,6 +1290,7 @@ final class CompactAddressField: NSTextField {
         context.endTransparencyLayer(); context.restoreGState()
     }
     override func mouseDown(with event: NSEvent) {
+        guard isEditable else { onBeginTabDrag(event); return }
         // An unfocused address is also the tab's drag surface. Once editing,
         // AppKit retains normal text selection, IME and text-drag behavior.
         guard currentEditor() == nil, let window else { super.mouseDown(with: event); return }
@@ -1240,6 +1302,7 @@ final class CompactAddressField: NSTextField {
         currentEditor()?.selectedRange = NSRange(location: 0, length: stringValue.utf16.count)
     }
     override func becomeFirstResponder() -> Bool {
+        guard isEditable else { return false }
         alignment = .left
         let accepted = super.becomeFirstResponder()
         if accepted { onFocusChange(true) }

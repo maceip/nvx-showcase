@@ -120,8 +120,8 @@ public final class NVXEngine: @unchecked Sendable {
                                        rawOutput: "Cannot resolve nvx repository")
         }
         let proc = Process()
-        proc.executableURL = URL(fileURLWithPath: "/usr/bin/env")
-        proc.arguments = ["python3", repo.appending(path: "scripts/nvx.py").path, "snapshot", "verify", dir.path]
+        proc.executableURL = RepoRoot.python3(near: repo)
+        proc.arguments = [repo.appending(path: "scripts/nvx.py").path, "snapshot", "verify", dir.path]
         proc.currentDirectoryURL = repo
         let pipe = Pipe()
         proc.standardOutput = pipe
@@ -221,6 +221,7 @@ public final class NVXEngine: @unchecked Sendable {
     public func runCommand(command: String, timeout: Double = 30.0,
                            preferWarmSnapshot: Bool = true,
                            explicitSnapshot: URL? = nil,
+                           onLaunch: (@Sendable (Int32, [String]) -> Void)? = nil,
                            onOutput: (@Sendable (String) -> Void)? = nil) async throws -> NVXExecutionResult {
         guard let repo = RepoRoot.resolve() else {
             throw NSError(domain: "NVXEngine", code: 1, userInfo: [NSLocalizedDescriptionKey: "Repository root not found"])
@@ -287,6 +288,7 @@ public final class NVXEngine: @unchecked Sendable {
 
         let startTime = CFAbsoluteTimeGetCurrent()
         try proc.run()
+        onLaunch?(proc.processIdentifier, args)
 
         let tag = UUID().uuidString.replacingOccurrences(of: "-", with: "")
         let startMarker = "START:\(tag)"
@@ -302,7 +304,6 @@ public final class NVXEngine: @unchecked Sendable {
         \(command)
         )
         echo \(endMarkerPrefix)$?:___
-        /sbin/nvx-exit 0
 
         """
 
@@ -322,6 +323,11 @@ public final class NVXEngine: @unchecked Sendable {
                 var foundExitCode: Int? = nil
 
                 func cleanup() {
+                    // Wait for the command marker on the host before requesting
+                    // exit, so legacy UART output cannot be truncated by poweroff.
+                    if foundExitCode != nil {
+                        try? stdinHandle.write(contentsOf: Data("/sbin/nvx-exit 0\n".utf8))
+                    }
                     try? stdinHandle.close()
                     let stopDeadline = Date().addingTimeInterval(0.5)
                     while proc.isRunning && Date() < stopDeadline {

@@ -14,7 +14,11 @@ struct ContentView: View {
                             searchPrompt: "Rename tab", symbol: tab.kind.symbol, iconImage: tab.icon,
                             isBusy: tab.isBusy, isPinned: tab.isPinned,
                             reloadTitle: tab.kind == .snapshots ? "Refresh Snapshots" : nil,
-                            addressLabel: "Rename tab")
+                            addressLabel: "Tab label",
+                            hoverContent: CompactTabHoverContent(title: tab.title,
+                                subtitle: tab.kind == .snapshots ? tab.snapshots.rootURL?.path
+                                    : (tab.title == tab.kind.rawValue ? nil : tab.kind.rawValue),
+                                detail: tab.isBusy ? "Operation in progress" : nil))
                     },
                     selection: workspace.selectedID,
                     onSelect: workspace.select, onClose: workspace.close,
@@ -23,6 +27,7 @@ struct ContentView: View {
                     onSearch: workspace.renameSelected,
                     onReload: { workspace.selected.snapshots.rescan() },
                     onSetPinned: workspace.setPinned,
+                    labelMode: .fixed,
                     previewSourceView: workspace.selected.pageView,
                     transferOwner: workspace,
                     onTransfer: { id, target, index in
@@ -34,21 +39,11 @@ struct ContentView: View {
                 Menu {
                     Button("New Runtime Tab", systemImage: "cpu") { workspace.insert(.runtime) }
                     Button("New Snapshots Tab", systemImage: "clock.arrow.circlepath") { workspace.insert(.snapshots) }
+                    Button("New Diff Tab", systemImage: "arrow.triangle.branch") { workspace.insert(.diff) }
                     Divider()
                     ForEach(workspace.tabs) { tab in
                         Button { workspace.select(tab.id) } label: {
                             Label(tab.title, systemImage: tab.id == workspace.selectedID ? "checkmark" : tab.kind.symbol)
-                        }
-                    }
-                    if !workspace.detached.isEmpty {
-                        Divider()
-                        Section("Running without a tab") {
-                            ForEach(workspace.detached) { tab in
-                                Menu(tab.title) {
-                                    Button("Reattach Tab") { workspace.reattach(tab.id) }
-                                    Button("Stop VM", role: .destructive) { workspace.stopDetached(tab.id) }
-                                }
-                            }
                         }
                     }
                 } label: { Image(systemName: "rectangle.stack") }

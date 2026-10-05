@@ -1,0 +1,33 @@
+{
+  "date": "2026-10-03",
+  "environment": "dedicated pie-safari-tabs macOS 26.5.2 guest; real VNC pointer input",
+  "app": "/Users/mac/nvx-showcase/dist/NVXShowcase.app",
+  "binarySHA256": "0dae712f780e414bebfb72b823f18b5e94f6b2867b64bfac200ebcd30989cdaa",
+  "pointer": {
+    "passed": true,
+    "exitCode": 0,
+    "checks": 19,
+    "evidence": "pointer/evidence.json"
+  },
+  "focusedGuardTests": {
+    "passed": true,
+    "tests": 7,
+    "log": "guard-tests.log"
+  },
+  "nativePieArchitecture": {
+    "passed": true,
+    "checks": 81,
+    "captures": 34,
+    "evidence": "architecture/run.json"
+  },
+  "builds": {
+    "NVXShowcaseRelease": "passed",
+    "PieXcodeDebug": "passed",
+    "NVXAppCodesignVerification": "passed"
+  },
+  "baseline": {
+    "expectedRegressionObserved": true,
+    "evidence": "baseline/evidence.json"
+  },
+  "scope": "Tab and window interactions only. Runtime payload execution and full NVX suite are outside this run."
+}

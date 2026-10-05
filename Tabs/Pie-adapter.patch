@@ -6,40 +6,41 @@
      var isPinned = false
 +    var reloadTitle: String? = "Refresh Sessions"
 +    var addressLabel: String = "Tab address and search"
+     var hoverContent: CompactTabHoverContent? = nil
  }
  
- struct CompactTabStrip: NSViewRepresentable {
-@@ -855,6 +857,9 @@
-         if self.selected && !selected && isEditingAddress { window?.makeFirstResponder(nil) }
-         if item.address != self.item.address { addressDraft = nil }
+@@ -902,7 +904,9 @@
          self.item = item; self.selected = selected
-+        address.setAccessibilityLabel(item.addressLabel)
+         address.isEditable = allowsAddressEditing
+         address.isSelectable = allowsAddressEditing
+-        address.setAccessibilityLabel(allowsAddressEditing ? "Tab address and search" : "Tab label")
++        address.setAccessibilityLabel(allowsAddressEditing ? item.addressLabel : "Tab label")
 +        reload.setAccessibilityLabel(item.reloadTitle ?? "Refresh")
 +        reload.toolTip = item.reloadTitle
+         address.lineBreakMode = allowsAddressEditing ? .byClipping : .byTruncatingTail
          effectiveAppearance.performAsCurrentDrawingAppearance {
              let dark = effectiveAppearance.bestMatch(from: [.darkAqua, .aqua]) == .darkAqua
-             address.textColor = NSColor.labelColor.withAlphaComponent(0.9)
-@@ -940,6 +945,19 @@
-                 address.frame = NSRect(x: start + 21, y: 4 + dy, width: textWidth, height: 19)
+@@ -992,6 +996,19 @@
                  address.alignment = .center
              }
+         }
 +            // A compressed tab must not reserve space for invisible controls.
 +            // Keep the title readable at the 120pt minimum; hover still makes
 +            // room for the close/refresh buttons without changing tab geometry.
-+            if w < 180 {
-+                let showsClose = !item.isPinned && !isSingleTab && (hovering || capturesDragForeground)
-+                let showsReload = item.reloadTitle != nil && !item.isBusy && (hovering || capturesDragForeground)
-+                let leading: CGFloat = showsClose ? 30 : 10
-+                let trailing: CGFloat = 29 + (showsReload || item.isBusy ? 22 : 0)
-+                icon.frame.origin.x = leading
-+                address.frame = NSRect(x: leading + 21, y: 4 + dy,
-+                    width: max(0, w - leading - 21 - trailing), height: 19)
-+                address.alignment = .center
-+            }
-         }
-         if selected && !isEditingAddress && !item.address.isEmpty && address.currentEditor() == nil {
++        if selected && !searching && w < 180 {
++            let showsClose = !item.isPinned && !isSingleTab && (hovering || capturesDragForeground)
++            let showsReload = item.reloadTitle != nil && !item.isBusy && (hovering || capturesDragForeground)
++            let leading: CGFloat = showsClose ? 30 : 10
++            let trailing: CGFloat = 29 + (showsReload || item.isBusy ? 22 : 0)
++            icon.frame.origin.x = leading
++            address.frame = NSRect(x: leading + 21, y: 4 + dy,
++                width: max(0, w - leading - 21 - trailing), height: 19)
++            address.alignment = .center
++        }
+         if selected && !isEditingAddress && !displayValue.isEmpty && address.currentEditor() == nil {
              let style = NSMutableParagraphStyle()
-@@ -954,7 +972,7 @@
+             style.alignment = address.alignment; style.lineBreakMode = allowsAddressEditing ? .byClipping : .byTruncatingTail
+@@ -1005,7 +1022,7 @@
          close.isHidden = item.isPinned || isSingleTab || (!hovering && !capturesDragForeground) || isEditingAddress
          icon.isHidden = false
          actions.isHidden = !selected || searching
@@ -48,7 +49,7 @@
          progress.isHidden = !selected || !item.isBusy
          if selected && item.isBusy { progress.startAnimation(nil) } else { progress.stopAnimation(nil) }
          address.updateFocusRingMask()
-@@ -1042,7 +1060,8 @@
+@@ -1101,7 +1118,8 @@
          pin.image = NSImage(systemSymbolName: item.isPinned ? "pin.slash" : "pin", accessibilityDescription: nil)
          pin.target = self; menu.addItem(pin)
          menu.addItem(.separator())

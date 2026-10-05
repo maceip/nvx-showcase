@@ -5,7 +5,14 @@ import Observation
 enum ShowcasePageKind: String, CaseIterable {
     case runtime = "Runtime"
     case snapshots = "Snapshots"
-    var symbol: String { self == .runtime ? "cpu" : "clock.arrow.circlepath" }
+    case diff = "Diff"
+    var symbol: String {
+        switch self {
+        case .runtime: "cpu"
+        case .snapshots: "clock.arrow.circlepath"
+        case .diff: "arrow.triangle.branch"
+        }
+    }
 }
 
 /// The controller AND hosting view travel together; moving a tab never starts
@@ -15,8 +22,9 @@ final class ShowcasePageTab: Identifiable {
     let id = UUID()
     let kind: ShowcasePageKind
     let icon: NSImage?
-    let controller: RunController
+    let controller = RunController()
     @ObservationIgnored lazy var snapshots = SnapshotStore()
+    @ObservationIgnored lazy var diff = ExecDiffStore()
     var isPinned = false
     var customTitle: String?
     @ObservationIgnored weak var owner: ShowcaseWorkspace?
@@ -28,9 +36,8 @@ final class ShowcasePageTab: Identifiable {
         retainedPage = host
         return host
     }
-    init(_ kind: ShowcasePageKind, controller: RunController? = nil) {
+    init(_ kind: ShowcasePageKind) {
         self.kind = kind
-        self.controller = controller ?? RunController()
         icon = NSImage(systemSymbolName: kind.symbol, accessibilityDescription: kind.rawValue)
     }
     /// Per-VM identity: a runtime tab names its payload and live state so
@@ -54,27 +61,28 @@ final class ShowcasePageTab: Identifiable {
                 return "Snapshots · \(leaf)"
             }
             return kind.rawValue
+        case .diff:
+            if diff.running { return "Diff · comparing" }
+            if !diff.modules.isEmpty { return "Diff · \(diff.modules.count)" }
+            return kind.rawValue
         }
     }
     var isBusy: Bool {
-        kind == .runtime ? controller.phase == .live || controller.phase == .launching
-            : snapshots.resumeRunning || snapshots.verifyState == .running
+        switch kind {
+        case .runtime: controller.phase == .live || controller.phase == .launching
+        case .snapshots: snapshots.resumeRunning || snapshots.verifyState == .running
+        case .diff: diff.running
+        }
     }
     func stop() {
         if controller.phase == .live || controller.phase == .launching { controller.stop() }
         if kind == .snapshots { snapshots.stopResume() }
-        releaseView()
-        owner = nil
-    }
-    /// Release the retained hosting view without touching a live run.
-    /// Closing a live tab detaches it; the VM keeps running (its log
-    /// tail timer is owned by the retained controller) until the tab is
-    /// reattached, explicitly stopped, or the app quits.
-    func releaseView() {
+        if kind == .diff { diff.stop() }
         // Break the retained host -> SwiftUI root -> tab cycle only on close.
         retainedPage?.removeFromSuperview()
         retainedPage?.rootView = ShowcasePage(tab: nil)
         retainedPage = nil
+        owner = nil
     }
 }
 
@@ -84,7 +92,9 @@ final class ShowcaseWorkspace {
     private(set) var selectedID: UUID
     @ObservationIgnored weak var window: NSWindow?
     init(tabs: [ShowcasePageTab]? = nil) {
-        let pages = tabs?.isEmpty == false ? tabs! : [ShowcasePageTab(.runtime), ShowcasePageTab(.snapshots)]
+        let pages = tabs?.isEmpty == false ? tabs! : [
+            ShowcasePageTab(.runtime), ShowcasePageTab(.snapshots), ShowcasePageTab(.diff),
+        ]
         self.tabs = pages.filter(\.isPinned) + pages.filter { !$0.isPinned }
         selectedID = pages[0].id
         self.tabs.forEach { $0.owner = self }
@@ -103,37 +113,11 @@ final class ShowcaseWorkspace {
     }
     func close(_ id: UUID) {
         guard let index = tabs.firstIndex(where: { $0.id == id }) else { return }
-        let tab = tabs[index]
-        if tab.kind == .runtime
-            && (tab.controller.phase == .live || tab.controller.phase == .launching) {
-            // A live VM outlives its tab: park the tab (view released,
-            // controller retained) so it can be reattached or stopped.
-            tabs.remove(at: index)
-            tab.releaseView()
-            detached.append(tab)
-        } else {
-            tabs.remove(at: index).stop()
-        }
+        tabs.remove(at: index).stop()
         if tabs.isEmpty {
             let replacement = ShowcasePageTab(.runtime); replacement.owner = self; tabs = [replacement]
         }
         if selectedID == id { selectedID = tabs[min(index, tabs.count - 1)].id }
-    }
-    /// Tabs closed while live, in close order. Their VMs keep running.
-    private(set) var detached: [ShowcasePageTab] = []
-    /// Move a detached tab back into the strip and select it.
-    func reattach(_ id: UUID) {
-        guard let index = detached.firstIndex(where: { $0.id == id }) else { return }
-        let tab = detached.remove(at: index)
-        tab.owner = self
-        let after = tabs.firstIndex { $0.id == selectedID }.map { $0 + 1 } ?? tabs.count
-        tabs.insert(tab, at: max(pinnedCount, min(after, tabs.count)))
-        selectedID = id
-    }
-    /// Kill a detached tab's VM and drop it.
-    func stopDetached(_ id: UUID) {
-        guard let index = detached.firstIndex(where: { $0.id == id }) else { return }
-        detached.remove(at: index).stop()
     }
     func closeSelected() { if !selected.isPinned { close(selectedID) } }
     func move(_ id: UUID, to index: Int) {
@@ -161,6 +145,16 @@ final class ShowcaseWorkspace {
         let tab = tabs.first { $0.kind == .snapshots } ?? insert(.snapshots)
         tab.snapshots.rootURL = root; select(tab.id)
     }
+    /// Fill a Diff tab's snapshot slots from the Snapshots page and start
+    /// the comparison. Only non-nil slots are overwritten.
+    func openDiffComparing(primary: URL?, secondary: URL?) {
+        let tab = tabs.first { $0.kind == .diff } ?? insert(.diff)
+        tab.diff.setSnapshots(primary: primary, secondary: secondary)
+        select(tab.id)
+        if tab.diff.primaryURL != nil && tab.diff.secondaryURL != nil {
+            tab.diff.compare()
+        }
+    }
     @discardableResult func transfer(_ id: UUID, to destination: ShowcaseWorkspace, at index: Int) -> Bool {
         guard tabs.count > 1, destination !== self,
               let sourceIndex = tabs.firstIndex(where: { $0.id == id }) else { return false }
@@ -177,7 +171,7 @@ final class ShowcaseWorkspace {
         if selectedID == id { selectedID = tabs[min(index, tabs.count - 1)].id }
         ShowcaseDetachedWindow.open(tab: tab, at: point, size: window?.frame.size)
     }
-    func stopAll() { tabs.forEach { $0.stop() }; detached.forEach { $0.stop() }; detached.removeAll() }
+    func stopAll() { tabs.forEach { $0.stop() } }
 }
 
 struct ShowcasePage: View {
@@ -190,7 +184,12 @@ struct ShowcasePage: View {
                 LiveView(controller: tab.controller, onSnapshotSaved: { [weak tab] root in
                     tab?.owner?.reviewSnapshots(at: root)
                 })
-            case .snapshots: SnapshotBrowserView(store: tab.snapshots)
+            case .snapshots: SnapshotBrowserView(store: tab.snapshots, onSendToDiff: { [weak tab] url, slot in
+                tab?.owner?.openDiffComparing(
+                    primary: slot == .primary ? url : nil,
+                    secondary: slot == .secondary ? url : nil)
+            })
+            case .diff: ExecDiffView(store: tab.diff)
             }
         }
     }

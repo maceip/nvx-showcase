@@ -19,8 +19,8 @@ struct LiveView: View {
         VStack(spacing: 0) {
             runControls
             Divider()
-            verdictBanner
-            Divider()
+            instrumentDeck
+            Divider().overlay(ConsoleStyle.line)
             if controller.payload.id == "agent-sandbox" {
                 sandboxCommandBar
                 Divider()
@@ -36,7 +36,7 @@ struct LiveView: View {
                 HStack {
                     Label("Snapshot saved to \(saved.lastPathComponent)",
                           systemImage: "tray.and.arrow.down.fill")
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(ConsoleStyle.muted)
                     Spacer()
                     Button("Review in Snapshots") {
                         onSnapshotSaved?(saved.deletingLastPathComponent())
@@ -47,6 +47,9 @@ struct LiveView: View {
                 .background(.bar)
             }
         }
+        .background(ConsoleStyle.background)
+        .foregroundStyle(ConsoleStyle.text)
+        .environment(\.colorScheme, .dark)
         .sheet(isPresented: $showingSave) {
             SaveSnapshotSheet(controller: controller)
         }
@@ -115,91 +118,132 @@ struct LiveView: View {
         Task { await controller.runAgentCommand(commandInput) }
     }
 
-    private var verdictBanner: some View {
-        HStack(spacing: 16) {
-            Image(systemName: controller.verdict.systemImage)
-                .font(.system(size: 36))
-                .foregroundStyle(verdictColor)
-            VStack(alignment: .leading, spacing: 2) {
-                Text(controller.verdict.rawValue)
-                    .font(.system(size: 28, weight: .bold))
-                Text("\(controller.payload.name) · \(controller.phase.rawValue)")
-                    .font(.callout)
-                    .foregroundStyle(.secondary)
-                Text(controller.payload.blurb)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+    private var instrumentDeck: some View {
+        VStack(spacing: 16) {
+            HStack(alignment: .center, spacing: 24) {
+                VStack(alignment: .leading, spacing: 10) {
+                    HStack(spacing: 8) {
+                        IndicatorLamp(color: verdictColor, lit: controller.phase != .idle)
+                        InstrumentLabel(text: "Runtime / " + controller.phase.rawValue)
+                    }
+                    Text(controller.displayStatus)
+                        .font(.system(size: 27, weight: .medium, design: .monospaced))
+                        .tracking(2).foregroundStyle(verdictColor)
+                    Text(controller.payload.blurb)
+                        .font(.system(size: 11)).foregroundStyle(ConsoleStyle.muted)
+                        .lineLimit(2).frame(maxWidth: 370, alignment: .leading)
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                MainInstrument(label: "Attempted", value: String(format: "%03d", controller.attempted))
+                MainInstrument(label: "Denied", value: String(format: "%03d", controller.denied))
+                TimelineView(.animation(minimumInterval: 1, paused: canLaunch)) { context in
+                    MainInstrument(label: "Elapsed", value: InstrumentFormat.elapsed(controller.elapsed(at: context.date)))
+                }
+                .frame(minWidth: 130, alignment: .leading)
             }
-            Spacer()
-            StatBlock(label: "Attempted", value: controller.attempted)
-            StatBlock(label: "Denied", value: controller.denied)
+            .padding(18)
+            .background(ConsoleStyle.well, in: RoundedRectangle(cornerRadius: 6))
+            .overlay(RoundedRectangle(cornerRadius: 6).strokeBorder(ConsoleStyle.line))
+
+            HStack {
+                InstrumentLabel(text: "Resource monitor")
+                Spacer()
+                InstrumentLabel(text: resourceStatus)
+            }
+            HStack(spacing: 9) {
+                ResourceInstrument(label: "CPU", value: cpuValue, unit: "%",
+                    detail: "Host VMM · 100% = one core",
+                    fraction: controller.resources.sample?.cpuPercent.map { $0 / 100 })
+                ResourceInstrument(label: "Memory", value: InstrumentFormat.mebibytes(controller.resources.sample?.residentBytes),
+                    unit: "MiB", detail: "Host VMM · resident memory")
+                ResourceInstrument(label: "Disk I/O", value: InstrumentFormat.mebibytes(diskBytes),
+                    unit: "MiB", detail: "Host VMM · total read + write")
+                ResourceInstrument(label: "Guest allocation", value: controller.allocation.processors.map(String.init) ?? "—",
+                    unit: "vCPU", detail: controller.allocation.memoryMiB.map { "\($0) MiB RAM · configured" } ?? "RAM reported after launch")
+            }
         }
-        .padding(.horizontal, 20)
-        .padding(.vertical, 14)
-        .background(.bar)
+        .padding(16)
+        .background(ConsoleStyle.panel)
     }
 
+    private var cpuValue: String {
+        controller.resources.sample?.cpuPercent.map { String(format: "%.1f", $0) } ?? "—"
+    }
+    private var diskBytes: UInt64? {
+        guard let sample = controller.resources.sample, let read = sample.diskReadBytes,
+              let written = sample.diskWrittenBytes else { return nil }
+        return read + written
+    }
+    private var resourceStatus: String {
+        if controller.phase == .idle { return "Awaiting launch" }
+        if controller.resources.sample == nil { return controller.phase == .done ? "No sample collected" : "Waiting for VMM" }
+        return controller.phase == .done ? "Last sample · run ended" : "Host readings · 1 sec"
+    }
     private var verdictColor: Color {
+        if controller.phase == .idle { return ConsoleStyle.muted }
         switch controller.verdict {
-        case .contained: .green
-        case .escaped: .red
-        case .failed: .orange
-        case .running: .blue
-        case .clean: .green
+        case .contained, .clean: return ConsoleStyle.mint
+        case .escaped, .failed: return ConsoleStyle.red
+        case .running: return ConsoleStyle.amber
         }
     }
 
     private var consolePane: some View {
         VStack(alignment: .leading, spacing: 0) {
-            paneHeader("Guest console", systemImage: "terminal")
-            ScrollViewReader { proxy in
-                ScrollView {
-                    LazyVStack(alignment: .leading, spacing: 2) {
-                        ForEach(controller.consoleLines.indices, id: \.self) { index in
-                            Text(controller.consoleLines[index])
-                                .font(.system(size: 12, design: .monospaced))
-                                .textSelection(.enabled)
-                                .id(index)
-                        }
+            ConsoleSectionHeader(title: "01 / Guest console", trailing: "\(controller.consoleLines.count) lines")
+            if controller.consoleLines.isEmpty {
+                ConsoleEmptyState(title: "Console ready", message: "Launch a payload to open the guest output stream.")
+            } else {
+                ScrollViewReader { proxy in
+                    ScrollView {
+                        LazyVStack(alignment: .leading, spacing: 3) {
+                            ForEach(controller.consoleLines.indices, id: \.self) { index in
+                                Text(controller.consoleLines[index])
+                                    .font(.system(size: 11, design: .monospaced))
+                                    .textSelection(.enabled).id(index)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                            }
+                        }.padding(16)
                     }
-                    .padding(8)
-                }
-                .background(Color(nsColor: .textBackgroundColor))
-                .onChange(of: controller.consoleLines.count) {
-                    if let last = controller.consoleLines.indices.last {
-                        proxy.scrollTo(last, anchor: .bottom)
+                    .onChange(of: controller.consoleLines.count) {
+                        if let last = controller.consoleLines.indices.last { proxy.scrollTo(last, anchor: .bottom) }
                     }
                 }
             }
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(ConsoleStyle.background)
     }
 
     private var eventsPane: some View {
         VStack(alignment: .leading, spacing: 0) {
-            paneHeader("Policy denials", systemImage: "shield.slash")
-            List(controller.events) { event in
-                HStack(alignment: .top, spacing: 8) {
-                    Image(systemName: eventIcon(for: event.kind))
-                        .foregroundStyle(eventColor(for: event.kind))
-                    Text(StreamParser.displayText(for: event.text))
-                        .font(.callout)
-                        .textSelection(.enabled)
+            ConsoleSectionHeader(title: "02 / Event feed", trailing: "\(controller.events.count) events")
+            if controller.events.isEmpty {
+                ConsoleEmptyState(title: "Listening for events", message: "Boot markers, policy denials and snapshot captures appear here.")
+            } else {
+                ScrollView {
+                    LazyVStack(alignment: .leading, spacing: 0) {
+                        ForEach(controller.events) { event in
+                            HStack(alignment: .top, spacing: 10) {
+                                Image(systemName: eventIcon(for: event.kind))
+                                    .foregroundStyle(eventColor(for: event.kind)).frame(width: 15)
+                                VStack(alignment: .leading, spacing: 5) {
+                                    Text(event.timestamp, format: .dateTime.hour().minute().second())
+                                        .font(.system(size: 9, design: .monospaced)).foregroundStyle(ConsoleStyle.muted)
+                                    Text(StreamParser.displayText(for: event.text))
+                                        .font(.system(size: 11)).textSelection(.enabled)
+                                }
+                                Spacer(minLength: 0)
+                            }
+                            .padding(14)
+                            .overlay(alignment: .bottom) { Rectangle().fill(ConsoleStyle.line).frame(height: 1) }
+                        }
+                    }
                 }
-                .padding(.vertical, 2)
             }
-            .listStyle(.plain)
         }
-    }
-
-    private func paneHeader(_ title: String, systemImage: String) -> some View {
-        HStack {
-            Label(title, systemImage: systemImage)
-                .font(.headline)
-            Spacer()
-        }
-        .padding(.horizontal, 12)
-        .padding(.vertical, 8)
-        .background(.bar)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(ConsoleStyle.background)
     }
 
     private func eventIcon(for kind: GuestEvent.Kind) -> String {
@@ -217,9 +261,9 @@ struct LiveView: View {
 
     private func eventColor(for kind: GuestEvent.Kind) -> Color {
         switch kind {
-        case .denied, .probeFailed: .red
-        case .probeSucceeded, .boot, .snapshotSaved: .green
-        default: .secondary
+        case .denied, .probeFailed: ConsoleStyle.red
+        case .probeSucceeded, .boot, .snapshotSaved: ConsoleStyle.mint
+        default: ConsoleStyle.muted
         }
     }
 }
@@ -305,22 +349,5 @@ private struct SaveSnapshotSheet: View {
                 parent = url
             }
         }
-    }
-}
-
-private struct StatBlock: View {
-    let label: String
-    let value: Int
-
-    var body: some View {
-        VStack {
-            Text("\(value)")
-                .font(.system(size: 30, weight: .semibold))
-                .monospacedDigit()
-            Text(label.uppercased())
-                .font(.caption)
-                .foregroundStyle(.secondary)
-        }
-        .frame(minWidth: 90)
     }
 }

@@ -45,7 +45,7 @@ jobs:
         with:
           persist-credentials: false
       - name: Assemble app
-        run: ./assemble.sh
+        run: bash assemble.sh
       - name: Archive app
         run: ditto -c -k --keepParent dist/NVXShowcase.app NVXShowcase-macos.zip
       - name: Attest archive provenance

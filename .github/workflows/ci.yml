@@ -4,13 +4,62 @@ on:
     branches: [main]
   pull_request:
   workflow_dispatch:
+
+permissions:
+  contents: read
+
 jobs:
   build-test:
     # NSGlassEffectView (macOS 26 SDK) requires a Tahoe runner + Xcode 26.
     runs-on: macos-26
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+      - name: Check out shared NVX contract vectors
+        uses: actions/checkout@v5
+        with:
+          repository: maceip/nvx
+          ref: dev
+          path: nvx-source
+          persist-credentials: false
       - name: Build
         run: swift build
-      - name: Test
+      - name: Test standalone app and shared contracts
+        env:
+          NVX_REPO: ${{ github.workspace }}/nvx-source
+          NVX_VECTOR_TESTS: '1'
         run: swift test
+
+  package:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: build-test
+    runs-on: macos-26
+    permissions:
+      contents: read
+      id-token: write
+      attestations: write
+      artifact-metadata: write
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+      - name: Assemble app
+        run: ./assemble.sh
+      - name: Archive app
+        run: ditto -c -k --keepParent dist/NVXShowcase.app NVXShowcase-macos.zip
+      - name: Attest archive provenance
+        id: attest
+        uses: actions/attest@v4
+        with:
+          subject-path: NVXShowcase-macos.zip
+      - name: Stage attestation bundle
+        run: cp "${{ steps.attest.outputs.bundle-path }}" NVXShowcase-macos.zip.sigstore.jsonl
+      - name: Upload archive and attestation bundle
+        uses: actions/upload-artifact@v7
+        with:
+          name: NVXShowcase-macos-${{ github.sha }}
+          path: |
+            NVXShowcase-macos.zip
+            NVXShowcase-macos.zip.sigstore.jsonl
+          if-no-files-found: error

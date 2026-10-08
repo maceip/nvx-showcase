@@ -1,5 +1,6 @@
 import Foundation
 import Testing
+@testable import NVXCore
 @testable import NVXShowcase
 
 @Suite(.serialized) @MainActor
@@ -116,7 +117,9 @@ struct InstrumentTests {
         #expect(monitor.sample == nil)
     }
 
-    @Test func agentCommandCollectsActualVMMResources() async throws {
+    @Test(.enabled(if: ProcessInfo.processInfo.environment["NVX_VMM_TESTS"] == "1"))
+    func agentCommandCollectsActualVMMResources() async throws {
+        try #require(NVXEngine.shared.checkStatus().ready, "VMM, kernel, and initrd are required")
         let controller = RunController()
         controller.payload = .agentSandbox
         await controller.runAgentCommand("sleep 2; echo NVX_METRICS_CHECK", preferWarmSnapshot: false)

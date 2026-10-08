@@ -4,28 +4,34 @@ import Testing
 
 @Suite(.serialized)
 struct EngineTests {
-    @Test func statusReportsReady() {
-        let engine = NVXEngine.shared
-        let status = engine.checkStatus()
-        print("Status ready:", status.ready)
-        print("Repo root:", status.repoRoot ?? "nil")
-        print("Default snapshot available:", status.defaultSnapshotAvailable)
-        #expect(status.ready == true)
+    @Test func statusReflectsAvailableResources() {
+        let status = NVXEngine.shared.checkStatus()
+        #expect(status.ready == (status.openvmmExists && status.kernelExists && status.initrdExists))
+        #expect(status.defaultSnapshotAvailable == (status.defaultSnapshotPath != nil))
+        if status.repoRoot == nil {
+            #expect(!status.ready)
+        }
     }
 
-    @Test func verifyExistingSnapshot() async {
+    @Test(.enabled(if: ProcessInfo.processInfo.environment["NVX_VMM_TESTS"] == "1"))
+    func statusReportsReady() {
+        #expect(NVXEngine.shared.checkStatus().ready)
+    }
+
+    @Test(.enabled(if: ProcessInfo.processInfo.environment["NVX_VMM_TESTS"] == "1"))
+    func verifyExistingSnapshot() async throws {
         let engine = NVXEngine.shared
         let snapURL = URL(fileURLWithPath: "/private/tmp/snap-warm-01")
-        guard FileManager.default.fileExists(atPath: snapURL.appending(path: "manifest.bin").path) else {
-            return
-        }
+        try #require(FileManager.default.fileExists(atPath: snapURL.appending(path: "manifest.bin").path), "Expected snapshot at /private/tmp/snap-warm-01")
         let manifest = await engine.verifySnapshot(at: snapURL)
         print("Manifest valid:", manifest.isValid, "arch:", manifest.architecture ?? "nil")
         #expect(manifest.isValid == true)
         #expect(manifest.architecture == "aarch64")
     }
 
-    @Test func runCommandColdBoot() async throws {
+    @Test(.enabled(if: ProcessInfo.processInfo.environment["NVX_VMM_TESTS"] == "1"))
+    func runCommandColdBoot() async throws {
+        try #require(NVXEngine.shared.checkStatus().ready, "VMM, kernel, and initrd are required")
         let engine = NVXEngine.shared
         let res = try await engine.runCommand(
             command: "echo HELLO_NVX; uname -a",
@@ -42,12 +48,12 @@ struct EngineTests {
         #expect(res.stdout.contains("Linux"))
     }
 
-    @Test func runCommandWarmSnapshot() async throws {
+    @Test(.enabled(if: ProcessInfo.processInfo.environment["NVX_VMM_TESTS"] == "1"))
+    func runCommandWarmSnapshot() async throws {
+        try #require(NVXEngine.shared.checkStatus().openvmmExists, "VMM is required")
         let engine = NVXEngine.shared
         let snapURL = URL(fileURLWithPath: "/private/tmp/snap-warm-01")
-        guard FileManager.default.fileExists(atPath: snapURL.appending(path: "manifest.bin").path) else {
-            return
-        }
+        try #require(FileManager.default.fileExists(atPath: snapURL.appending(path: "manifest.bin").path), "Expected snapshot at /private/tmp/snap-warm-01")
         let res = try await engine.runCommand(
             command: "echo HELLO_RESTORE; uname -a",
             timeout: 5.0,
@@ -65,8 +71,10 @@ struct EngineTests {
         #expect(res.stdout.contains("Linux"))
     }
 
-    @Test func checkpointLifecycle() throws {
+    @Test(.enabled(if: ProcessInfo.processInfo.environment["NVX_VMM_TESTS"] == "1"))
+    func checkpointLifecycle() throws {
         let engine = NVXEngine.shared
+        try #require(engine.checkStatus().defaultSnapshotAvailable, "A source snapshot is required")
         let testCheckpointName = "test-checkpoint-\(UUID().uuidString.prefix(8))"
         defer {
             try? engine.deleteCheckpoint(name: testCheckpointName)

@@ -3,8 +3,31 @@ import Testing
 @testable import NVXCore
 
 struct ProxyGoldenTests {
-    @Test func commonPythonAndSwiftVectors() throws {
-        let fixture = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent().appendingPathComponent("scripts/testdata/proxy-v1.json")
+    @Test func standaloneCredentialIsolation() throws {
+        let scope = CredentialProxyScope("example.com", 443)
+        let forwarded = try CredentialProxyPolicy.prepare(
+            method: "POST", target: "https://EXAMPLE.com/submit?x=1",
+            headers: [("Authorization", "Bearer caller"), ("Connection", "x-private"),
+                      ("X-Private", "discard"), ("Content-Type", "application/json")],
+            allowed: [scope], bindings: [CredentialProxyBinding(scope: scope, value: "host-secret")]
+        )
+        #expect(forwarded.host == "example.com")
+        #expect(forwarded.port == 443)
+        #expect(forwarded.path == "/submit?x=1")
+        #expect(forwarded.headers["authorization"] == "Bearer host-secret")
+        #expect(forwarded.headers["content-type"] == "application/json")
+        #expect(forwarded.headers["x-private"] == nil)
+        #expect(forwarded.headers["accept-encoding"] == "identity")
+        #expect(throws: (any Error).self) {
+            try CredentialProxyPolicy.prepare(method: "POST", target: "https://other.example/",
+                                              headers: [], allowed: [scope], bindings: [])
+        }
+    }
+
+    @Test(.enabled(if: ProcessInfo.processInfo.environment["NVX_VECTOR_TESTS"] == "1"))
+    func commonPythonAndSwiftVectors() throws {
+        let repo = try #require(RepoRoot.resolve(), "Set NVX_REPO to the NVX checkout containing shared vectors")
+        let fixture = repo.appendingPathComponent("scripts/testdata/proxy-v1.json")
         let rows = try #require(JSONSerialization.jsonObject(with: Data(contentsOf: fixture)) as? [[String: Any]])
         for row in rows {
             let method = try #require(row["method"] as? String), target = try #require(row["target"] as? String)
